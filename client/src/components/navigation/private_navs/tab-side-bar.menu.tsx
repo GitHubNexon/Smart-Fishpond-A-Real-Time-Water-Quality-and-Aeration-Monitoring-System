@@ -1,7 +1,6 @@
-import { MdDashboard, MdSchool } from 'react-icons/md';
+import { MdDashboard } from 'react-icons/md';
 import {
   FaUserGraduate,
-  FaChalkboardTeacher,
   FaCalendarAlt,
   FaClipboardList,
   FaCertificate,
@@ -9,10 +8,17 @@ import {
   FaBullhorn,
   FaUsers,
   FaClipboardCheck,
-  FaGraduationCap,
   FaBookOpen,
   FaTasks,
   FaUser,
+  FaFileInvoice,
+  FaHardHat,
+  FaTools,
+  FaFolderOpen,
+  FaChartBar,
+  FaRegClipboard,
+  FaShieldAlt,
+  FaDollarSign,
 } from 'react-icons/fa';
 import { FaUserShield } from 'react-icons/fa6';
 
@@ -23,323 +29,185 @@ interface MenuItems {
   role: string[];
 }
 
-export const AdministrativeMenuItems: MenuItems[] = [
-  { path: '/dashboard', icon: <MdDashboard />, label: 'Dashboard', role: [] },
-  { path: '/profile', icon: <FaUser />, label: 'Account Profile', role: [] },
-  {
-    path: '/account',
-    icon: <FaUserShield />,
-    label: 'Account Information',
-    role: [],
-  },
-  {
-    path: '/notifications',
-    icon: <FaBullhorn />,
-    label: 'Notifications',
-    role: [],
-  },
-  {
-    path: '/announcements',
-    icon: <FaBullhorn />,
-    label: 'Announcements',
-    role: [],
-  },
+// Icon mapping based on labels for construction management
+const getIconForLabel = (label: string): React.ReactNode => {
+  const iconMap: Record<string, React.ReactNode> = {
+    Dashboard: <MdDashboard />,
+    'Account Profile': <FaUser />,
+    'Account Information': <FaUserShield />,
+    Notifications: <FaBullhorn />,
+    Announcements: <FaBullhorn />,
+    'Project Overview': <FaFolderOpen />,
+    'Reports & Dashboard': <FaChartBar />,
+    'Project Documents': <FaFileAlt />,
+    'Site Inspections': <FaRegClipboard />,
+    'Work Equipments': <FaTools />,
+    'Admin - Users': <FaUsers />,
+    'Admin - Roles': <FaUserShield />,
+    'Admin - Permissions': <FaClipboardCheck />,
+    'Admin - System Audit Logs': <FaFileAlt />,
+    'Safety Reports': <FaHardHat />,
+    'Site Inpections': <FaRegClipboard />,
+    'Purchase Orders': <FaFileInvoice />,
+    'Cost Tracking': <FaDollarSign />,
+    'My Task': <FaTasks />,
+  };
 
-  // Admin Routes
-  {
+  return iconMap[label] || <FaClipboardList />;
+};
+
+// Base menu items configuration
+const menuConfig = {
+  dashboard: { path: '/dashboard', label: 'Dashboard', role: [] },
+  profile: { path: '/profile', label: 'Account Profile', role: [] },
+  account: { path: '/account', label: 'Account Information', role: [] },
+  notifications: { path: '/notifications', label: 'Notifications', role: [] },
+  announcements: { path: '/announcements', label: 'Announcements', role: [] },
+  projects: { path: '/projects', label: 'Project Overview', role: [] },
+  reports: { path: '/reports', label: 'Reports & Dashboard', role: [] },
+  documents: { path: '/documents', label: 'Project Documents', role: [] },
+  siteInspections: {
+    path: '/site-inspections',
+    label: 'Site Inspections',
+    role: [],
+  },
+  equipment: { path: '/equipment', label: 'Work Equipments', role: [] },
+  adminUsers: {
     path: '/admin/users',
-    icon: <FaUsers />,
     label: 'Admin - Users',
-    role: ['Administrator', 'Moderator'],
+    role: ['Administrator', 'Moderator', 'Project-Manager'],
   },
-  {
+  adminRoles: {
     path: '/admin/roles',
-    icon: <FaUserShield />,
     label: 'Admin - Roles',
-    role: ['Administrator', 'Moderator'],
+    role: ['Administrator', 'Moderator', 'Project-Manager'],
   },
-  {
+  adminPermissions: {
     path: '/admin/permissions',
-    icon: <FaClipboardCheck />,
     label: 'Admin - Permissions',
-    role: ['Administrator', 'Moderator'],
+    role: ['Administrator', 'Moderator', 'Project-Manager'],
   },
-  {
+  adminAuditLogs: {
     path: '/admin/audit-logs',
-    icon: <FaFileAlt />,
     label: 'Admin - System Audit Logs',
-    role: ['Administrator', 'Moderator'],
+    role: ['Administrator', 'Moderator', 'Project-Manager'],
   },
-];
+  safetyReports: {
+    path: '/safety-reports',
+    label: 'Safety Reports',
+    role: ['Project-Manager', 'Safety-Officer'],
+  },
+  purchaseOrders: {
+    path: '/purchase-orders',
+    label: 'Purchase Orders',
+    role: ['Procurement-Manager', 'Project-Manager'],
+  },
+  costTracking: {
+    path: '/costs',
+    label: 'Cost Tracking',
+    role: ['Procurement-Manager', 'Project-Manager'],
+  },
+  myTasks: { path: '/assigned-tasks', label: 'My Task', role: [] },
+};
 
-// Admin / HR menu
-export const HRMenuItems: MenuItems[] = [
-  { path: '/dashboard', icon: <MdDashboard />, label: 'Dashboard', role: [] },
-  { path: '/profile', icon: <FaUser />, label: 'Account Profile', role: [] },
-  {
-    path: '/account',
-    icon: <FaUserShield />,
-    label: 'Account Information',
-    role: [],
-  },
-  {
-    path: '/notifications',
-    icon: <FaBullhorn />,
-    label: 'Notifications',
-    role: [],
-  },
-  {
-    path: '/announcements',
-    icon: <FaBullhorn />,
-    label: 'Announcements',
-    role: [],
-  },
+// Helper function to create menu items with icons
+const createMenuItems = (keys: string[]): MenuItems[] => {
+  return keys.map((key) => {
+    const config = menuConfig[key as keyof typeof menuConfig];
+    return {
+      ...config,
+      icon: getIconForLabel(config.label),
+    };
+  });
+};
 
-  // Admin Routes
-  {
-    path: '/admin/users',
-    icon: <FaUsers />,
-    label: 'Admin - Users',
-    role: ['HR-Administrator', 'Administrator'],
-  },
-  {
-    path: '/admin/roles',
-    icon: <FaUserShield />,
-    label: 'Admin - Roles',
-    role: ['HR-Administrator', 'Administrator'],
-  },
-  {
-    path: '/admin/permissions',
-    icon: <FaClipboardCheck />,
-    label: 'Admin - Permissions',
-    role: ['HR-Administrator', 'Administrator'],
-  },
-  {
-    path: '/admin/audit-logs',
-    icon: <FaFileAlt />,
-    label: 'Admin - System Audit Logs',
-    role: ['HR-Administrator', 'Administrator'],
-  },
+// Export menu items for each role
+export const AdministrativeMenuItems: MenuItems[] = createMenuItems([
+  'dashboard',
+  'profile',
+  'account',
+  'notifications',
+  'announcements',
+  'projects',
+  'reports',
+  'documents',
+  'siteInspections',
+  'equipment',
+  'adminUsers',
+  'adminRoles',
+  'adminPermissions',
+  'adminAuditLogs',
+  'safetyReports',
+  'purchaseOrders',
+  'costTracking',
+]);
 
-  // HR Core
-  {
-    path: '/employee-records',
-    icon: <FaUser />,
-    label: 'Employee Records',
-    role: ['HR-Administrator', 'HR-Manager', 'HR-Staff'],
-  },
-  {
-    path: '/attendance-management',
-    icon: <FaClipboardCheck />,
-    label: 'Attendance Management',
-    role: ['HR-Administrator', 'HR-Manager', 'HR-Staff'],
-  },
-  {
-    path: '/schedule-management',
-    icon: <FaCalendarAlt />,
-    label: 'Schedule Management',
-    role: ['HR-Administrator', 'HR-Manager', 'HR-Staff'],
-  },
-  {
-    path: '/leave-management',
-    icon: <FaClipboardList />,
-    label: 'Leave Management',
-    role: ['HR-Administrator', 'HR-Manager', 'HR-Staff'],
-  },
+export const ClientMenuItems: MenuItems[] = createMenuItems([
+  'dashboard',
+  'announcements',
+  'projects',
+]);
 
-  // Payroll & Benefits
-  {
-    path: '/payroll-management',
-    icon: <FaFileAlt />,
-    label: 'Payroll Management',
-    role: ['HR-Administrator', 'HR-Manager', 'HR-Staff'],
-  },
-  {
-    path: '/benefits-management',
-    icon: <FaBookOpen />,
-    label: 'Benefits Management',
-    role: ['HR-Administrator', 'HR-Manager', 'HR-Staff'],
-  },
-  {
-    path: '/documents-management',
-    icon: <FaFileAlt />,
-    label: 'Documents Management',
-    role: ['HR-Administrator', 'HR-Manager', 'HR-Staff'],
-  },
+export const ProcurementManagerItems: MenuItems[] = createMenuItems([
+  'dashboard',
+  'announcements',
+  'projects',
+  'reports',
+  'documents',
+  'siteInspections',
+  'equipment',
+  'purchaseOrders',
+  'costTracking',
+  'myTasks',
+]);
 
-  // Performance
-  {
-    path: '/performance-management',
-    icon: <FaTasks />,
-    label: 'Performance Reviews',
-    role: ['HR-Administrator', 'HR-Manager', 'HR-Staff'],
-  },
-  {
-    path: '/certificates-management',
-    icon: <FaCertificate />,
-    label: 'Certificate Documents',
-    role: ['HR-Administrator', 'HR-Manager', 'HR-Staff'],
-  },
+export const ProjectManagerItems: MenuItems[] = createMenuItems([
+  'dashboard',
+  'announcements',
+  'projects',
+  'reports',
+  'documents',
+  'siteInspections',
+  'equipment',
+  'adminUsers',
+  'adminRoles',
+  'adminPermissions',
+  'adminAuditLogs',
+  'safetyReports',
+  'purchaseOrders',
+  'costTracking',
+]);
 
-  // Reports
-  {
-    path: '/reports',
-    icon: <FaFileAlt />,
-    label: 'Reports',
-    role: ['HR-Administrator', 'HR-Manager', 'HR-Staff'],
-  },
-];
+export const SiteEngineerMenuItems: MenuItems[] = createMenuItems([
+  'dashboard',
+  'announcements',
+  'projects',
+  'reports',
+  'documents',
+  'siteInspections',
+  'myTasks',
+  'equipment',
+]);
 
-// Employee Menu
-export const EmployeeMenuItems: MenuItems[] = [
-  { path: '/dashboard', icon: <MdDashboard />, label: 'Dashboard', role: [] },
-  { path: '/profile', icon: <FaUser />, label: 'Account Profile', role: [] },
-  {
-    path: '/account',
-    icon: <FaUserShield />,
-    label: 'Account Information',
-    role: [],
-  },
-  {
-    path: '/notifications',
-    icon: <FaBullhorn />,
-    label: 'Notifications',
-    role: [],
-  },
-  {
-    path: '/announcements',
-    icon: <FaBullhorn />,
-    label: 'Announcements',
-    role: [],
-  },
+export const ArchitectMenuItems: MenuItems[] = createMenuItems([
+  'dashboard',
+  'announcements',
+  'projects',
+  'reports',
+  'documents',
+  'siteInspections',
+  'myTasks',
+  'equipment',
+]);
 
-  // Employee Specific
-  {
-    path: '/my-attendance',
-    icon: <FaClipboardCheck />,
-    label: 'My Attendance',
-    role: ['Employee'],
-  },
-  {
-    path: '/my-schedule',
-    icon: <FaCalendarAlt />,
-    label: 'My Schedule',
-    role: ['Employee'],
-  },
-  {
-    path: '/leave-requests',
-    icon: <FaClipboardList />,
-    label: 'Leave Requests',
-    role: ['Employee'],
-  },
-  {
-    path: '/payslips',
-    icon: <FaFileAlt />,
-    label: 'Payslips',
-    role: ['Employee'],
-  },
-  {
-    path: '/benefits',
-    icon: <FaBookOpen />,
-    label: 'Benefits',
-    role: ['Employee'],
-  },
-  {
-    path: '/my-documents',
-    icon: <FaFileAlt />,
-    label: 'My Documents',
-    role: ['Employee'],
-  },
-  {
-    path: '/my-performance',
-    icon: <FaTasks />,
-    label: 'Performance Review',
-    role: ['Employee'],
-  },
-  {
-    path: '/my-certificates',
-    icon: <FaCertificate />,
-    label: 'Certificates',
-    role: ['Employee'],
-  },
-];
-
-// Accountant Menu
-export const AccountantMenuItems: MenuItems[] = [
-  { path: '/dashboard', icon: <MdDashboard />, label: 'Dashboard', role: [] },
-  { path: '/profile', icon: <FaUser />, label: 'Account Profile', role: [] },
-  {
-    path: '/account',
-    icon: <FaUserShield />,
-    label: 'Account Information',
-    role: [],
-  },
-  {
-    path: '/notifications',
-    icon: <FaBullhorn />,
-    label: 'Notifications',
-    role: [],
-  },
-  {
-    path: '/announcements',
-    icon: <FaBullhorn />,
-    label: 'Announcements',
-    role: [],
-  },
-
-  // Payroll Operations
-  {
-    path: '/deductions',
-    icon: <FaClipboardList />,
-    label: 'Deductions & Contributions',
-    role: ['Accountant'],
-  },
-  {
-    path: '/allowances',
-    icon: <FaFileAlt />,
-    label: 'Allowance Management',
-    role: ['Accountant'],
-  },
-
-  // Employee Finance
-  {
-    path: '/payslips-management',
-    icon: <FaFileAlt />,
-    label: 'Employee Payslips',
-    role: ['Accountant'],
-  },
-  {
-    path: '/reimbursements',
-    icon: <FaFileAlt />,
-    label: 'Reimbursements',
-    role: ['Accountant'],
-  },
-  {
-    path: '/cash-advances',
-    icon: <FaFileAlt />,
-    label: 'Cash Advance Requests',
-    role: ['Accountant'],
-  },
-
-  // Government & Compliance
-  {
-    path: '/government-reports',
-    icon: <FaFileAlt />,
-    label: 'Government Reports',
-    role: ['Accountant'],
-  },
-  {
-    path: '/tax-documents',
-    icon: <FaFileAlt />,
-    label: 'Tax Documents',
-    role: ['Accountant'],
-  },
-
-  // Financial Reports
-  {
-    path: '/financial-statements',
-    icon: <FaFileAlt />,
-    label: 'Financial Statements',
-    role: ['Accountant'],
-  },
-];
+export const SafetyOfficerMenuItems: MenuItems[] = createMenuItems([
+  'dashboard',
+  'announcements',
+  'projects',
+  'reports',
+  'documents',
+  'siteInspections',
+  'myTasks',
+  'safetyReports',
+  'equipment',
+]);

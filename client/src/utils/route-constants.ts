@@ -17,7 +17,6 @@ export const publicRoutes = [
 ];
 
 export const privateRoutes = [
-  '/admin',
   '/admin/users',
   '/admin/roles',
   '/admin/permissions',
@@ -26,46 +25,31 @@ export const privateRoutes = [
   '/dashboard',
   '/profile',
   '/account',
-  '/search',
-  '/system',
   '/chat-bot',
-
-  '/employee-info',
-  '/my-attendance',
-  '/my-schedule',
-  '/leave-requests',
-  '/payslips',
-  '/benefits',
-  '/my-documents',
-  '/my-performance',
-  '/my-certificates',
-  //hr-admin
-  '/employee-records',
-  '/attendance-management',
-  '/schedule-management',
-  '/leave-management',
-  '/payroll-management',
-  '/benefits-management',
-  '/documents-management',
-  '/performance-management',
-  '/certificates-management',
+  '/announcements',
+  '/projects',
+  '/documents',
   '/reports',
-  '/deductions',
-  '/allowances',
-  '/payslips-management',
-  '/reimbursements',
-  '/cash-advances',
-  '/government-reports',
-  '/tax-documents',
-  '/financial-statements',
+  '/site-inspections',
+  '/assigned-tasks',
+  '/safety-reports',
+  '/equipment',
+  '/purchase-orders',
+  '/costs',
 ];
 
 const allRoutes = [
+  { label: 'Chat Bot', value: '/chat-bot' },
   { label: 'Dashboard', value: '/dashboard' },
   { label: 'Account Profile', value: '/profile' },
   { label: 'Account Information', value: '/account' },
   { label: 'Notifications', value: '/notifications' },
   { label: 'Announcements', value: '/announcements' },
+  { label: 'Project Overview', value: '/projects' },
+  { label: 'Documents', value: '/documents' },
+  { label: 'Reports & Dashboards', value: '/reports' },
+  { label: 'Site Inspections', value: '/site-inspections' }, //CRUD
+  { label: 'Assigned Tasks', value: '/assigned-tasks' },
 ];
 const adminRoutes = [
   {
@@ -89,60 +73,29 @@ const adminRoutes = [
 export const routesByCategory = {
   all: allRoutes,
   admin: adminRoutes,
-  employee: [
+  safety_officer: [
     ...allRoutes,
-    { label: 'My Attendance', value: '/my-attendance' }, // employee specific
-    { label: 'My Schedule', value: '/my-schedule' }, // employee specific
-    { label: 'Leave Requests', value: '/leave-requests' }, // employee specific
-    { label: 'Payslips', value: '/payslips' }, // employee specific
-    { label: 'Benefits', value: '/benefits' }, // employee specific
-    { label: 'My Documents', value: '/my-documents' }, // employee specific
-    { label: 'Performance Review', value: '/my-performance' }, // employee specific
-    { label: 'Certificates', value: '/my-certificates' }, // employee specific
+    { label: 'Assigned Tasks', value: '/assigned-tasks' },
+    { label: 'Safety Reports', value: '/safety-reports' },
+    { label: 'Equipment & Materials', value: '/equipment' },
   ],
-  hr: [
+  client: [...allRoutes],
+  procurement_manager: [
+    ...allRoutes,
+    { label: 'Equipment & Materials', value: '/equipment' },
+    { label: 'Purchase Orders', value: '/purchase-orders' },
+    { label: 'Cost Tracking', value: '/costs' },
+  ],
+  project_manager: [
     ...allRoutes,
     ...adminRoutes,
-
-    // HR Core
-    { label: 'Employee Information', value: '/employee-info' },
-    { label: 'Employee Records', value: '/employee-records' },
-    { label: 'Attendance Management', value: '/attendance-management' },
-    { label: 'Schedule Management', value: '/schedule-management' },
-    { label: 'Leave Management', value: '/leave-management' },
-
-    // Payroll & Benefits
-    { label: 'Payroll Management', value: '/payroll-management' },
-    { label: 'Benefits Management', value: '/benefits-management' },
-    { label: 'Documents Management', value: '/documents-management' },
-
-    // Performance
-    { label: 'Performance Reviews', value: '/performance-management' },
-    { label: 'Certificate Documents', value: '/certificates-management' },
-
-    // HR Tools
-    { label: 'Reports', value: '/reports' },
+    { label: 'Safety Reports', value: '/safety-reports' },
+    { label: 'Equipment & Materials', value: '/equipment' },
+    { label: 'Purchase Orders', value: '/purchase-orders' },
+    { label: 'Cost Tracking', value: '/costs' },
   ],
-  accountant: [
-    ...allRoutes,
-
-    // Payroll Operations
-    { label: 'Employee Information', value: '/employee-info' },
-    { label: 'Deductions & Contributions', value: '/deductions' },
-    { label: 'Allowance Management', value: '/allowances' },
-
-    // Employee Finance
-    { label: 'Employee Payslips', value: '/payslips-management' },
-    { label: 'Reimbursements', value: '/reimbursements' },
-    { label: 'Cash Advance Requests', value: '/cash-advances' },
-
-    // Government & Compliance
-    { label: 'Government Reports', value: '/government-reports' },
-    { label: 'Tax Documents', value: '/tax-documents' },
-
-    // Financial Reports
-    { label: 'Financial Statements', value: '/financial-statements' },
-  ],
+  site_engineer: [...allRoutes],
+  architect: [...allRoutes],
 
   // Add more categories as needed
 };

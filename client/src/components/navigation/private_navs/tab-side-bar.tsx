@@ -17,9 +17,12 @@ import { Separator } from '@/components/ui/separator';
 import SideBarProfile from './side-bar-profile';
 import SearchDialog from '@/components/customs/search-dialog';
 import {
-  HRMenuItems,
-  EmployeeMenuItems,
-  AccountantMenuItems,
+  ClientMenuItems,
+  ProcurementManagerItems,
+  ProjectManagerItems,
+  SiteEngineerMenuItems,
+  ArchitectMenuItems,
+  SafetyOfficerMenuItems,
   AdministrativeMenuItems,
 } from './tab-side-bar.menu';
 
@@ -106,10 +109,12 @@ export default function TabSideBar({ isOpen, onClose }: TabSideBarProps) {
 
     if (['Administrator', 'Moderator', 'User'].includes(role))
       return AdministrativeMenuItems;
-    if (['HR-Administrator', 'HR-Manager', 'HR-Staff'].includes(role))
-      return HRMenuItems;
-    if (role === 'Accountant') return AccountantMenuItems;
-    if (role === 'Employee') return EmployeeMenuItems;
+    if (role === 'Client') return ClientMenuItems;
+    if (role === 'Safety-Officer') return SafetyOfficerMenuItems;
+    if (role === 'Architect') return ArchitectMenuItems;
+    if (role === 'Site-Engineer') return SiteEngineerMenuItems;
+    if (role === 'Procurement-Manager') return ProcurementManagerItems;
+    if (role === 'Project-Manager') return ProjectManagerItems;
     return [];
   };
 
@@ -167,7 +172,7 @@ export default function TabSideBar({ isOpen, onClose }: TabSideBarProps) {
               <img src="/images/logo.webp" alt="Logo" className="h-8 w-8" />
               {isOpen && (
                 <span className="font-bold text-[0.7em]">
-                  Human Resource Management System
+                  Construction Project Management System
                 </span>
               )}
             </div>
