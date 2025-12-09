@@ -17,12 +17,7 @@ import { Separator } from '@/components/ui/separator';
 import SideBarProfile from './side-bar-profile';
 import SearchDialog from '@/components/customs/search-dialog';
 import {
-  ClientMenuItems,
-  ProcurementManagerItems,
-  ProjectManagerItems,
-  SiteEngineerMenuItems,
-  ArchitectMenuItems,
-  SafetyOfficerMenuItems,
+  ResearcherMenuItems,
   AdministrativeMenuItems,
 } from './tab-side-bar.menu';
 
@@ -109,12 +104,8 @@ export default function TabSideBar({ isOpen, onClose }: TabSideBarProps) {
 
     if (['Administrator', 'Moderator', 'User'].includes(role))
       return AdministrativeMenuItems;
-    if (role === 'Client') return ClientMenuItems;
-    if (role === 'Safety-Officer') return SafetyOfficerMenuItems;
-    if (role === 'Architect') return ArchitectMenuItems;
-    if (role === 'Site-Engineer') return SiteEngineerMenuItems;
-    if (role === 'Procurement-Manager') return ProcurementManagerItems;
-    if (role === 'Project-Manager') return ProjectManagerItems;
+    if (role === 'Researcher') return ResearcherMenuItems;
+
     return [];
   };
 
@@ -171,9 +162,7 @@ export default function TabSideBar({ isOpen, onClose }: TabSideBarProps) {
             <div className="flex items-center space-x-2 mb-6">
               <img src="/images/logo.webp" alt="Logo" className="h-8 w-8" />
               {isOpen && (
-                <span className="font-bold text-[0.7em]">
-                  Construction Project Management System
-                </span>
+                <span className="font-bold text-[0.7em]">Smart Pond</span>
               )}
             </div>
 

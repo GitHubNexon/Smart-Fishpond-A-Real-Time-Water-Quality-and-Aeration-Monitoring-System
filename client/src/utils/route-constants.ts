@@ -10,10 +10,9 @@ export const publicRoutes = [
   //   "/reset-password",
   //   "/reset-password-verify",
   //   "/reset-password-complete",
-  //   "/explore",
-  //   "/creators",
+  '/explore',
+  '/creators',
   '/about',
-  '/blogs',
 ];
 
 export const privateRoutes = [
@@ -26,16 +25,11 @@ export const privateRoutes = [
   '/profile',
   '/account',
   '/chat-bot',
-  '/announcements',
-  '/projects',
-  '/documents',
-  '/reports',
-  '/site-inspections',
-  '/assigned-tasks',
-  '/safety-reports',
-  '/equipment',
-  '/purchase-orders',
-  '/costs',
+  // new
+  '/temperature-monitoring',
+  '/turbidity-monitoring',
+  '/ph-water-monitoring',
+  '/water-level-monitoring',
 ];
 
 const allRoutes = [
@@ -44,12 +38,10 @@ const allRoutes = [
   { label: 'Account Profile', value: '/profile' },
   { label: 'Account Information', value: '/account' },
   { label: 'Notifications', value: '/notifications' },
-  { label: 'Announcements', value: '/announcements' },
-  { label: 'Project Overview', value: '/projects' },
-  { label: 'Documents', value: '/documents' },
-  { label: 'Reports & Dashboards', value: '/reports' },
-  { label: 'Site Inspections', value: '/site-inspections' }, //CRUD
-  { label: 'Assigned Tasks', value: '/assigned-tasks' },
+  { label: 'Temperature Monitoring', value: '/temperature-monitoring' },
+  { label: 'Turbidity Monitoring', value: '/turbidity-monitoring' },
+  { label: 'pH Water Monitoring', value: '/ph-water-monitoring' },
+  { label: 'Water Level Monitoring', value: '/water-level-monitoring' },
 ];
 const adminRoutes = [
   {
@@ -72,30 +64,10 @@ const adminRoutes = [
 
 export const routesByCategory = {
   all: allRoutes,
-  admin: adminRoutes,
-  safety_officer: [
-    ...allRoutes,
-    { label: 'Assigned Tasks', value: '/assigned-tasks' },
-    { label: 'Safety Reports', value: '/safety-reports' },
-    { label: 'Equipment & Materials', value: '/equipment' },
-  ],
-  client: [...allRoutes],
-  procurement_manager: [
-    ...allRoutes,
-    { label: 'Equipment & Materials', value: '/equipment' },
-    { label: 'Purchase Orders', value: '/purchase-orders' },
-    { label: 'Cost Tracking', value: '/costs' },
-  ],
-  project_manager: [
-    ...allRoutes,
-    ...adminRoutes,
-    { label: 'Safety Reports', value: '/safety-reports' },
-    { label: 'Equipment & Materials', value: '/equipment' },
-    { label: 'Purchase Orders', value: '/purchase-orders' },
-    { label: 'Cost Tracking', value: '/costs' },
-  ],
-  site_engineer: [...allRoutes],
-  architect: [...allRoutes],
+  administrator: [...allRoutes, ...adminRoutes],
+  researcher: [...allRoutes, ...adminRoutes],
+  fishpond_operator: [...allRoutes],
+  monitoring_manager: [...allRoutes, ...adminRoutes],
 
   // Add more categories as needed
 };

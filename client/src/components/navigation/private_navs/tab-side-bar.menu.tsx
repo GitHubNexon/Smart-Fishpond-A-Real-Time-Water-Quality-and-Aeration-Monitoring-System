@@ -1,26 +1,12 @@
 import { MdDashboard } from 'react-icons/md';
+import { FaClipboardList, FaBullhorn, FaUser } from 'react-icons/fa';
 import {
-  FaUserGraduate,
-  FaCalendarAlt,
-  FaClipboardList,
-  FaCertificate,
-  FaFileAlt,
-  FaBullhorn,
-  FaUsers,
-  FaClipboardCheck,
-  FaBookOpen,
-  FaTasks,
-  FaUser,
-  FaFileInvoice,
-  FaHardHat,
-  FaTools,
-  FaFolderOpen,
-  FaChartBar,
-  FaRegClipboard,
-  FaShieldAlt,
-  FaDollarSign,
-} from 'react-icons/fa';
-import { FaUserShield } from 'react-icons/fa6';
+  FaUserShield,
+  FaTemperatureFull,
+  FaDroplet,
+  FaFlask,
+  FaGauge,
+} from 'react-icons/fa6';
 
 interface MenuItems {
   path: string;
@@ -37,20 +23,10 @@ const getIconForLabel = (label: string): React.ReactNode => {
     'Account Information': <FaUserShield />,
     Notifications: <FaBullhorn />,
     Announcements: <FaBullhorn />,
-    'Project Overview': <FaFolderOpen />,
-    'Reports & Dashboard': <FaChartBar />,
-    'Project Documents': <FaFileAlt />,
-    'Site Inspections': <FaRegClipboard />,
-    'Work Equipments': <FaTools />,
-    'Admin - Users': <FaUsers />,
-    'Admin - Roles': <FaUserShield />,
-    'Admin - Permissions': <FaClipboardCheck />,
-    'Admin - System Audit Logs': <FaFileAlt />,
-    'Safety Reports': <FaHardHat />,
-    'Site Inpections': <FaRegClipboard />,
-    'Purchase Orders': <FaFileInvoice />,
-    'Cost Tracking': <FaDollarSign />,
-    'My Task': <FaTasks />,
+    'Temperature Monitoring': <FaTemperatureFull />,
+    'Turbidity Monitoring': <FaDroplet />,
+    'ph Water Monitoring': <FaFlask />,
+    'Water Level Monitoring': <FaGauge />,
   };
 
   return iconMap[label] || <FaClipboardList />;
@@ -62,16 +38,7 @@ const menuConfig = {
   profile: { path: '/profile', label: 'Account Profile', role: [] },
   account: { path: '/account', label: 'Account Information', role: [] },
   notifications: { path: '/notifications', label: 'Notifications', role: [] },
-  announcements: { path: '/announcements', label: 'Announcements', role: [] },
-  projects: { path: '/projects', label: 'Project Overview', role: [] },
-  reports: { path: '/reports', label: 'Reports & Dashboard', role: [] },
-  documents: { path: '/documents', label: 'Project Documents', role: [] },
-  siteInspections: {
-    path: '/site-inspections',
-    label: 'Site Inspections',
-    role: [],
-  },
-  equipment: { path: '/equipment', label: 'Work Equipments', role: [] },
+
   adminUsers: {
     path: '/admin/users',
     label: 'Admin - Users',
@@ -92,22 +59,31 @@ const menuConfig = {
     label: 'Admin - System Audit Logs',
     role: ['Administrator', 'Moderator', 'Project-Manager'],
   },
-  safetyReports: {
-    path: '/safety-reports',
-    label: 'Safety Reports',
-    role: ['Project-Manager', 'Safety-Officer'],
+
+  // new routes
+  temperatureMonitoring: {
+    path: '/temperature-monitoring',
+    label: 'Temperature Monitoring',
+    role: [],
   },
-  purchaseOrders: {
-    path: '/purchase-orders',
-    label: 'Purchase Orders',
-    role: ['Procurement-Manager', 'Project-Manager'],
+
+  turbidityMonitoring: {
+    path: '/turbidity-monitoring',
+    label: 'Turbidity Monitoring',
+    role: [],
   },
-  costTracking: {
-    path: '/costs',
-    label: 'Cost Tracking',
-    role: ['Procurement-Manager', 'Project-Manager'],
+
+  phWaterMonitoring: {
+    path: '/ph-water-monitoring',
+    label: 'pH Water Monitoring',
+    role: [],
   },
-  myTasks: { path: '/assigned-tasks', label: 'My Task', role: [] },
+
+  waterLevelMonitoring: {
+    path: '/water-level-monitoring',
+    label: 'Water Level Monitoring',
+    role: [],
+  },
 };
 
 // Helper function to create menu items with icons
@@ -124,90 +100,43 @@ const createMenuItems = (keys: string[]): MenuItems[] => {
 // Export menu items for each role
 export const AdministrativeMenuItems: MenuItems[] = createMenuItems([
   'dashboard',
-  'profile',
-  'account',
-  'notifications',
-  'announcements',
-  'projects',
-  'reports',
-  'documents',
-  'siteInspections',
-  'equipment',
   'adminUsers',
   'adminRoles',
   'adminPermissions',
   'adminAuditLogs',
-  'safetyReports',
-  'purchaseOrders',
-  'costTracking',
+  'temperatureMonitoring',
+  'turbidityMonitoring',
+  'phWaterMonitoring',
+  'waterLevelMonitoring',
 ]);
 
-export const ClientMenuItems: MenuItems[] = createMenuItems([
+export const ResearcherMenuItems: MenuItems[] = createMenuItems([
   'dashboard',
-  'announcements',
-  'projects',
+  'temperatureMonitoring',
+  'turbidityMonitoring',
+  'phWaterMonitoring',
+  'waterLevelMonitoring',
 ]);
 
-export const ProcurementManagerItems: MenuItems[] = createMenuItems([
+
+export const FishPondOperatorMenutItems: MenuItems[] = createMenuItems([
   'dashboard',
-  'announcements',
-  'projects',
-  'reports',
-  'documents',
-  'siteInspections',
-  'equipment',
-  'purchaseOrders',
-  'costTracking',
-  'myTasks',
+  'temperatureMonitoring',
+  'turbidityMonitoring',
+  'phWaterMonitoring',
+  'waterLevelMonitoring',
 ]);
 
-export const ProjectManagerItems: MenuItems[] = createMenuItems([
+
+export const MonitoringManagerMenutItems: MenuItems[] = createMenuItems([
   'dashboard',
-  'announcements',
-  'projects',
-  'reports',
-  'documents',
-  'siteInspections',
-  'equipment',
   'adminUsers',
   'adminRoles',
   'adminPermissions',
   'adminAuditLogs',
-  'safetyReports',
-  'purchaseOrders',
-  'costTracking',
+  'temperatureMonitoring',
+  'turbidityMonitoring',
+  'phWaterMonitoring',
+  'waterLevelMonitoring',
 ]);
 
-export const SiteEngineerMenuItems: MenuItems[] = createMenuItems([
-  'dashboard',
-  'announcements',
-  'projects',
-  'reports',
-  'documents',
-  'siteInspections',
-  'myTasks',
-  'equipment',
-]);
-
-export const ArchitectMenuItems: MenuItems[] = createMenuItems([
-  'dashboard',
-  'announcements',
-  'projects',
-  'reports',
-  'documents',
-  'siteInspections',
-  'myTasks',
-  'equipment',
-]);
-
-export const SafetyOfficerMenuItems: MenuItems[] = createMenuItems([
-  'dashboard',
-  'announcements',
-  'projects',
-  'reports',
-  'documents',
-  'siteInspections',
-  'myTasks',
-  'safetyReports',
-  'equipment',
-]);

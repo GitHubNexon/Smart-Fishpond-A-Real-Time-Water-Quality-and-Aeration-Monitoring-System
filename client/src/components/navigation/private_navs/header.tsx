@@ -87,7 +87,7 @@ export default function Header({ onMenuClick }: HeaderProps) {
       </div>
 
       <div className="flex items-center space-x-3 sm:space-x-5 ml-auto pr-2">
-        <button
+        {/* <button
           onClick={() => setSearchOpen(true)}
           className="hidden sm:flex items-center justify-between gap-3 px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-zinc-800 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-zinc-700 transition"
         >
@@ -101,15 +101,14 @@ export default function Header({ onMenuClick }: HeaderProps) {
           </div>
         </button>
 
-        {/* Mobile search icon */}
         <button
           onClick={() => setSearchOpen(true)}
           className="sm:hidden flex items-center justify-center text-gray-50 hover:text-yellow-300 transition"
         >
           <Search className="w-6 h-6" />
-        </button>
+        </button> */}
 
-        <TooltipProvider>
+        {/* <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
               <button
@@ -121,7 +120,7 @@ export default function Header({ onMenuClick }: HeaderProps) {
             </TooltipTrigger>
             <TooltipContent> AIMS – Your Asset AI Assistant</TooltipContent>
           </Tooltip>
-        </TooltipProvider>
+        </TooltipProvider> */}
 
         <TooltipProvider>
           <Tooltip>
