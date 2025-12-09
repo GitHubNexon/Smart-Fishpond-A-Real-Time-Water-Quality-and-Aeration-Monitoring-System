@@ -183,15 +183,15 @@ export default function TabSideBar({ isOpen, onClose }: TabSideBarProps) {
 
             {/* Bottom Section */}
             <div className="mt-auto flex flex-col space-y-2">
-              {renderBottomButton(<Settings />, 'Settings', () =>
+              {/* {renderBottomButton(<Settings />, 'Settings', () =>
                 router.push('/settings'),
-              )}
+              )} */}
               {renderBottomButton(<HelpCircle />, 'Get Help', () =>
                 router.push('/help'),
               )}
-              {renderBottomButton(<Search />, 'Search', () =>
+              {/* {renderBottomButton(<Search />, 'Search', () =>
                 setSearchOpen(true),
-              )}
+              )} */}
               <Separator className="my-2" />
               <SideBarProfile isOpen={true} />
             </div>
