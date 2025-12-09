@@ -12,6 +12,7 @@ export const roleAccessMap: Record<string, string[]> = {
     '/turbidity-monitoring',
     '/ph-water-monitoring',
     '/water-level-monitoring',
+    '/do-monitoring',
   ],
   moderator: [
     '/admin/users',
@@ -26,6 +27,7 @@ export const roleAccessMap: Record<string, string[]> = {
     '/turbidity-monitoring',
     '/ph-water-monitoring',
     '/water-level-monitoring',
+    '/do-monitoring',
   ],
   user: [
     '/admin/users',
@@ -40,6 +42,7 @@ export const roleAccessMap: Record<string, string[]> = {
     '/turbidity-monitoring',
     '/ph-water-monitoring',
     '/water-level-monitoring',
+    '/do-monitoring',
   ],
   researcher: [
     '/admin/users',
@@ -54,6 +57,7 @@ export const roleAccessMap: Record<string, string[]> = {
     '/turbidity-monitoring',
     '/ph-water-monitoring',
     '/water-level-monitoring',
+    '/do-monitoring',
   ],
 
   'fishpond-operator': [
@@ -65,6 +69,7 @@ export const roleAccessMap: Record<string, string[]> = {
     '/turbidity-monitoring',
     '/ph-water-monitoring',
     '/water-level-monitoring',
+    '/do-monitoring',
   ],
 
   'monitoring-manager': [
@@ -80,5 +85,6 @@ export const roleAccessMap: Record<string, string[]> = {
     '/turbidity-monitoring',
     '/ph-water-monitoring',
     '/water-level-monitoring',
+    '/do-monitoring',
   ],
 };

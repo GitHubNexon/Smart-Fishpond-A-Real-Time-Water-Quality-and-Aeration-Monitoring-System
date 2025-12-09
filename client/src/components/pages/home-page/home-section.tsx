@@ -19,7 +19,7 @@ export default function HomeSection() {
                 <div className="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
                 IoT Monitoring System
               </div>
-              <h1 className="text-5xl sm:text-9xl lg:text-9xl font-bold leading-tight mb-6">
+              <h1 className="text-5xl sm:text-5xl lg:text-6xl font-bold leading-tight mb-6">
                 Smart Fishpond
                 <span className="block text-transparent bg-clip-text bg-linear-to-r from-primary via-emerald-400 to-primary mt-2">
                   Water Quality Monitor

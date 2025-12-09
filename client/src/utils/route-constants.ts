@@ -31,6 +31,7 @@ export const privateRoutes = [
   '/turbidity-monitoring',
   '/ph-water-monitoring',
   '/water-level-monitoring',
+  '/do-monitoring',
 ];
 
 const allRoutes = [
@@ -43,6 +44,7 @@ const allRoutes = [
   { label: 'Turbidity Monitoring', value: '/turbidity-monitoring' },
   { label: 'pH Water Monitoring', value: '/ph-water-monitoring' },
   { label: 'Water Level Monitoring', value: '/water-level-monitoring' },
+  { label: 'Dissolved Oxygen Monitoring', value: '/do-monitoring' },
 ];
 const adminRoutes = [
   {

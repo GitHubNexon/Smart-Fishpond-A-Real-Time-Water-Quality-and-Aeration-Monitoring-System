@@ -8,7 +8,9 @@ import { SocketModule } from './modules/sockets/socket.module';
 import { AuditModule } from './modules/audit/audit.module';
 import { NotificationsModule } from './modules/notifications/notifications.module';
 import { SystemModule } from './modules/system/system.module';
-
+import { SmsModule } from './modules/sms/sms.module';
+import { MailerModule } from './modules/mailer/mailer.module';
+import { SensorsModule } from './modules/sensors/sensors.module';
 
 @Module({
   imports: [
@@ -20,6 +22,9 @@ import { SystemModule } from './modules/system/system.module';
     AuditModule,
     NotificationsModule,
     SystemModule,
+    SmsModule,
+    MailerModule,
+    SensorsModule,
   ],
   exports: [
     HealthModule,
@@ -30,6 +35,9 @@ import { SystemModule } from './modules/system/system.module';
     NotificationsModule,
     AuditModule,
     SystemModule,
+    SmsModule,
+    MailerModule,
+    SensorsModule,
   ],
 })
 export class ModulesModule {}
