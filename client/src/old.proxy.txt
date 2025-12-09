@@ -1,0 +1,52 @@
+// src/proxy.ts
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
+import { publicRoutes } from '@/utils/route-constants';
+
+export function proxy(req: NextRequest) {
+  const { pathname } = req.nextUrl;
+  const maintenanceMode = process.env.NEXT_PUBLIC_MAINTENANCE_MODE === 'true';
+
+  if (maintenanceMode) {
+    const isMaintenancePath =
+      pathname === '/maintenance' ||
+      pathname.startsWith('/maintenance/') ||
+      pathname.startsWith('/_next') ||
+      pathname.startsWith('/favicon.ico');
+
+    if (!isMaintenancePath) {
+      return NextResponse.redirect(new URL('/maintenance', req.url));
+    }
+
+    return NextResponse.next();
+  }
+
+  if (publicRoutes.includes(pathname)) {
+    return NextResponse.next();
+  }
+
+  const mainToken = req.cookies.get('_auth_token_')?.value;
+  const passkeyToken =
+    req.cookies.get('_passkey_token_')?.value ||
+    req.cookies.get(process.env.PASSKEY_TOKEN_NAME ?? '_passkey_token_')?.value;
+
+  const sessionId = req.cookies.get('sessionId')?.value;
+
+  const hasFullAuth = mainToken && passkeyToken && sessionId;
+
+  if (!hasFullAuth) {
+    const redirectUrl = new URL('/login', req.url);
+    if (req.nextUrl.pathname !== '/login') {
+      return NextResponse.redirect(redirectUrl);
+    }
+  }
+
+  return NextResponse.next();
+}
+
+export const config = {
+  matcher: [
+    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:png|jpg|jpeg|svg|gif|webp|ico|txt|xml|json)$|backend/.*|uploads/.*).*)',
+  ],
+};
+

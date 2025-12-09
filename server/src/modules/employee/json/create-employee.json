@@ -1,0 +1,118 @@
+{
+  "employeeId": "EMP-2024-001",
+  "personalInfo": {
+    "firstName": "Juan",
+    "middleName": "Cruz",
+    "lastName": "Dela Cruz",
+    "suffix": "Jr.",
+    "birthDate": "1990-05-15T00:00:00.000Z",
+    "gender": "Male",
+    "civilStatus": "Married",
+    "bloodType": "O+",
+    "profileImage": "https://example.com/profiles/juan-delacruz.jpg",
+    "height": 175.5,
+    "weight": 70.2,
+    "citizenship": "Filipino"
+  },
+  "contactInfo": {
+    "contactNo": "+63-917-123-4567",
+    "contactEmail": "juan.delacruz@company.com",
+    "emergencyContactNo": "+63-918-765-4321",
+    "emergencyContactName": "Maria Dela Cruz",
+    "emergencyRelationship": "Spouse"
+  },
+  "addressInfo": {
+    "zipCode": "1100",
+    "street": "123 Mabini Street",
+    "barangay": "Barangay Santo Niño",
+    "city": "Quezon City",
+    "province": "Metro Manila",
+    "region": "National Capital Region (NCR)"
+  },
+  "governmentInfo": {
+    "sss": "34-1234567-8",
+    "pagIbig": "1234-5678-9012",
+    "philHealth": "12-345678901-2",
+    "tin": "123-456-789-000",
+    "passportNo": "P1234567A",
+    "driversLicense": "N01-12-345678",
+    "postalId": "POS1234567890",
+    "votersId": "1234-5678-9012-3456",
+    "nbi": "NBI-2024-001234",
+    "policeClearance": "PC-2024-QC-5678"
+  },
+  "familyInfo": {
+    "spouseFirstName": "Maria",
+    "spouseMiddleName": "Santos",
+    "spouseLastName": "Dela Cruz",
+    "spouseSuffix": null,
+    "fatherFirstName": "Pedro",
+    "fatherMiddleName": "Garcia",
+    "fatherLastName": "Dela Cruz",
+    "fatherSuffix": "Sr.",
+    "motherFirstName": "Rosa",
+    "motherMiddleName": "Lopez",
+    "motherLastName": "Dela Cruz",
+    "motherMaidenName": "Reyes",
+    "children": [
+      {
+        "firstName": "Miguel",
+        "middleName": "Santos",
+        "lastName": "Dela Cruz",
+        "suffix": null
+      },
+      {
+        "firstName": "Sofia",
+        "middleName": "Santos",
+        "lastName": "Dela Cruz",
+        "suffix": null
+      }
+    ]
+  },
+  "educationalInfo": {
+    "elementary": "Completed",
+    "elementarySchoolName": "Quezon City Elementary School",
+    "elementaryYearGraduated": "2002",
+    "highSchool": "Completed",
+    "highSchoolName": "Manila Science High School",
+    "highSchoolYearGraduated": "2006",
+    "college": "Completed",
+    "collegeSchoolName": "University of the Philippines Diliman",
+    "collegeYearGraduated": "2010",
+    "collegeCourse": "Bachelor of Science in Computer Science",
+    "masters": "Completed",
+    "mastersSchoolName": "Ateneo de Manila University",
+    "mastersYearGraduated": "2015",
+    "mastersCourse": "Master of Business Administration",
+    "phd": null,
+    "phdSchoolName": null,
+    "phdYearGraduated": null,
+    "phdCourse": null
+  },
+  "workExperienceInfo": [
+    {
+      "fromDate": "2010-06-01T00:00:00.000Z",
+      "toDate": "2013-12-31T00:00:00.000Z",
+      "position": "Junior Software Developer",
+      "department": "IT Department",
+      "employmentType": "Full-time",
+      "salary": 25000
+    },
+    {
+      "fromDate": "2014-01-15T00:00:00.000Z",
+      "toDate": "2018-06-30T00:00:00.000Z",
+      "position": "Senior Software Developer",
+      "department": "Engineering Department",
+      "employmentType": "Full-time",
+      "salary": 45000
+    },
+    {
+      "fromDate": "2018-07-01T00:00:00.000Z",
+      "toDate": "2024-01-31T00:00:00.000Z",
+      "position": "Technical Lead",
+      "department": "Engineering Department",
+      "employmentType": "Full-time",
+      "salary": 75000
+    }
+  ]
+}

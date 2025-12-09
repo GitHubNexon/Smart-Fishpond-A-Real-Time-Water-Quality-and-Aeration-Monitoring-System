@@ -1,0 +1,380 @@
+'use client';
+import { useEffect, useMemo, useState, useRef } from 'react';
+import { useRouter, useSearchParams, usePathname } from 'next/navigation';
+import {
+  ColumnFiltersState,
+  PaginationState,
+  SortingState,
+  VisibilityState,
+  getCoreRowModel,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  useReactTable,
+  ColumnDef,
+} from '@tanstack/react-table';
+import { useQuery, keepPreviousData } from '@tanstack/react-query';
+import { useDataTableSelectionStore } from './data-store';
+import {
+  UseDataTableProps,
+  UseDataTableReturn,
+  FetchDataResult,
+} from './data-table.interface';
+
+// LocalStorage keys
+const STORAGE_KEY_PREFIX = 'dataTable_';
+
+export function useDataTable<T extends Record<string, any>>({
+  columns,
+  fetchData,
+  initialData = [],
+  enableServerSide = false,
+  initialLoadDelay = 1000,
+  fetchLoadDelay = 500,
+  enableUrlSync = true,
+  storageKey = 'default',
+}: UseDataTableProps<T>): UseDataTableReturn<T> {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  const [data, setData] = useState<T[]>(initialData);
+  const [loading, setLoading] = useState(
+    enableServerSide && fetchData ? true : false,
+  );
+  const [error, setError] = useState<string | null>(null);
+  const [totalItems, setTotalItems] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [searchValue, setSearchValue] = useState('');
+  const [isInitialLoad, setIsInitialLoad] = useState(
+    enableServerSide && fetchData ? true : false,
+  );
+  const [isInitialized, setIsInitialized] = useState(false);
+
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 10,
+  });
+  const [sorting, setSorting] = useState<SortingState>([]);
+
+  const prevSearchValueRef = useRef(searchValue);
+  const selectionStore = useDataTableSelectionStore();
+
+  // Initialize from URL params or localStorage on mount
+  useEffect(() => {
+    if (!enableUrlSync) {
+      setIsInitialized(true);
+      return;
+    }
+
+    const urlPage = searchParams.get('page');
+    const urlLimit = searchParams.get('limit');
+    const urlKeyword = searchParams.get('keyword');
+    const urlTableKey = searchParams.get('tableKey');
+
+    let pageToUse = 1;
+    let limitToUse = 10;
+    let keywordToUse = '';
+
+    const shouldUseUrlParams = !urlTableKey || urlTableKey === storageKey;
+
+    if (shouldUseUrlParams && (urlPage || urlLimit || urlKeyword)) {
+      pageToUse = urlPage ? parseInt(urlPage, 10) : 1;
+      limitToUse = urlLimit ? parseInt(urlLimit, 10) : 10;
+      keywordToUse = urlKeyword || '';
+    } else {
+      try {
+        const stored = localStorage.getItem(
+          `${STORAGE_KEY_PREFIX}${storageKey}`,
+        );
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          pageToUse = parsed.page || 1;
+          limitToUse = parsed.limit || 10;
+          keywordToUse = parsed.keyword || '';
+        }
+      } catch (e) {
+        console.error('Failed to load from localStorage:', e);
+      }
+    }
+
+    setPagination({ pageIndex: pageToUse - 1, pageSize: limitToUse });
+    setSearchValue(keywordToUse);
+    prevSearchValueRef.current = keywordToUse;
+    setIsInitialized(true);
+  }, []);
+
+  // Sync URL and localStorage
+  useEffect(() => {
+    if (!enableUrlSync || !isInitialized) return;
+
+    const currentParams = new URLSearchParams(searchParams.toString());
+    currentParams.set('tableKey', storageKey);
+    currentParams.set('page', String(pagination.pageIndex + 1));
+    currentParams.set('limit', String(pagination.pageSize));
+    if (searchValue) {
+      currentParams.set('keyword', searchValue);
+    } else {
+      currentParams.delete('keyword');
+    }
+
+    const newUrl = `${pathname}?${currentParams.toString()}`;
+    router.replace(newUrl, { scroll: false });
+
+    try {
+      localStorage.setItem(
+        `${STORAGE_KEY_PREFIX}${storageKey}`,
+        JSON.stringify({
+          page: pagination.pageIndex + 1,
+          limit: pagination.pageSize,
+          keyword: searchValue,
+        }),
+      );
+    } catch (e) {
+      console.error('Failed to save to localStorage:', e);
+    }
+  }, [
+    pagination.pageIndex,
+    pagination.pageSize,
+    searchValue,
+    enableUrlSync,
+    isInitialized,
+    pathname,
+    router,
+    searchParams,
+    storageKey,
+  ]);
+
+  const rowSelection = useMemo(() => {
+    const selection: Record<string, boolean> = {};
+    data.forEach((item, index) => {
+      const itemId = item._id || item.id || index.toString();
+      if (selectionStore.isSelected(itemId)) {
+        selection[index.toString()] = true;
+      }
+    });
+    return selection;
+  }, [data, selectionStore.selectedRowIds]);
+
+  // Reset to page 1 when search value changes
+  useEffect(() => {
+    if (prevSearchValueRef.current !== searchValue) {
+      setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+      prevSearchValueRef.current = searchValue;
+    }
+  }, [searchValue]);
+
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  // React Query data fetching
+  const queryKey = [
+    'dataTable',
+    storageKey,
+    pagination.pageIndex + 1,
+    isInitialLoad ? 999999999 : pagination.pageSize,
+    searchValue,
+    sorting.length > 0 ? sorting[0].id : null,
+    sorting.length > 0 ? (sorting[0].desc ? 'desc' : 'asc') : null,
+    refreshKey,
+  ];
+
+  const {
+    data: queryData,
+    isLoading,
+    error: queryError,
+    refetch,
+  } = useQuery<FetchDataResult<T>, Error>({
+    queryKey,
+    queryFn: async (): Promise<FetchDataResult<T>> => {
+      if (!fetchData) {
+        return { data: [], totalItems: 0, totalPages: 0, currentPage: 1 };
+      }
+
+      const sortBy = sorting.length > 0 ? sorting[0].id : undefined;
+      const sortOrder =
+        sorting.length > 0 ? (sorting[0].desc ? 'desc' : 'asc') : undefined;
+
+      const delay = isInitialLoad ? initialLoadDelay : fetchLoadDelay;
+      if (delay > 0) {
+        await new Promise((resolve) => setTimeout(resolve, delay));
+      }
+
+      return fetchData({
+        page: pagination.pageIndex + 1,
+        limit: isInitialLoad ? 999999999 : pagination.pageSize,
+        keyword: searchValue || undefined,
+        sortBy,
+        sortOrder,
+      });
+    },
+    enabled: enableServerSide && !!fetchData && isInitialized,
+    staleTime: 5 * 60 * 1000, // Cache for 5 minutes
+    gcTime: 5 * 60 * 1000, // Garbage collection time for 5 minutes
+    placeholderData: keepPreviousData, // Replace keepPreviousData
+  });
+
+  // Update state with query results
+  useEffect(() => {
+    if (queryData) {
+      setData(queryData.data);
+      setTotalItems(queryData.totalItems);
+      setTotalPages(queryData.totalPages);
+      setCurrentPage(queryData.currentPage);
+      setLoading(isLoading);
+      setError(queryError ? queryError.message : null);
+      if (isInitialLoad) {
+        setIsInitialLoad(false);
+      }
+    }
+  }, [queryData, isLoading, queryError, isInitialLoad]);
+
+
+  // const refreshData = () => {
+  //   setPagination({ pageIndex: 0, pageSize: 10 });
+  //   setSearchValue('');
+  //   if (enableServerSide && fetchData) {
+  //     refetch();
+  //   }
+  // };
+
+
+  const refreshData = () => {
+    setPagination({ pageIndex: 0, pageSize: 10 });
+    setSearchValue('');
+    setRefreshKey((prev) => prev + 1);
+  };
+
+  const handleDeleteRows = () => {
+    const selectedRowIds = selectionStore.get();
+    if (!enableServerSide) {
+      const updatedData = data.filter((item) => {
+        const itemId = item._id || item.id;
+        return !selectedRowIds.includes(itemId);
+      });
+      setData(updatedData);
+    }
+    selectionStore.clear();
+    table.resetRowSelection();
+  };
+
+  const getSelectedRows = () => {
+    const selectedRowIds = selectionStore.get();
+    return data.filter((item) => {
+      const itemId = item._id || item.id;
+      return selectedRowIds.includes(itemId);
+    });
+  };
+
+  const getAllSelectedRowIds = () => {
+    return selectionStore.get();
+  };
+
+  const table = useReactTable({
+    data,
+    columns: columns as ColumnDef<T>[],
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: enableServerSide ? undefined : getSortedRowModel(),
+    onSortingChange: setSorting,
+    enableSortingRemoval: false,
+    getPaginationRowModel: enableServerSide
+      ? undefined
+      : getPaginationRowModel(),
+    onPaginationChange: setPagination,
+    onColumnFiltersChange: setColumnFilters,
+    onColumnVisibilityChange: setColumnVisibility,
+    getFilteredRowModel: enableServerSide ? undefined : getFilteredRowModel(),
+    pageCount: enableServerSide ? totalPages : undefined,
+    manualPagination: enableServerSide,
+    manualSorting: enableServerSide,
+    manualFiltering: enableServerSide,
+    state: {
+      sorting,
+      pagination,
+      columnFilters,
+      columnVisibility,
+      rowSelection,
+    },
+    enableRowSelection: true,
+    onRowSelectionChange: (updaterOrValue) => {
+      if (typeof updaterOrValue === 'function') {
+        const newSelection = updaterOrValue(rowSelection);
+        Object.keys(newSelection).forEach((rowIndex) => {
+          const dataIndex = parseInt(rowIndex, 10);
+          const item = data[dataIndex];
+          const itemId = item?._id || item?.id || dataIndex.toString();
+          if (newSelection[rowIndex]) {
+            selectionStore.store(itemId);
+          } else {
+            selectionStore.clearSelected(itemId);
+          }
+        });
+        Object.keys(rowSelection).forEach((rowIndex) => {
+          if (!newSelection[rowIndex] && rowSelection[rowIndex]) {
+            const dataIndex = parseInt(rowIndex, 10);
+            const item = data[dataIndex];
+            const itemId = item?._id || item?.id || dataIndex.toString();
+            selectionStore.clearSelected(itemId);
+          }
+        });
+      }
+    },
+  });
+
+  const toggleAllPageRowsSelected = (value: boolean) => {
+    const currentPageIds = data.map(
+      (item, index) => item._id || item.id || index.toString(),
+    );
+    if (value) {
+      selectionStore.store(currentPageIds);
+    } else {
+      selectionStore.clearSelected(currentPageIds);
+    }
+  };
+
+  const getIsAllPageRowsSelected = () => {
+    if (data.length === 0) return false;
+    return data.every((item, index) => {
+      const itemId = item._id || item.id || index.toString();
+      return selectionStore.isSelected(itemId);
+    });
+  };
+
+  const getIsSomePageRowsSelected = () => {
+    return (
+      data.some((item, index) => {
+        const itemId = item._id || item.id || index.toString();
+        return selectionStore.isSelected(itemId);
+      }) && !getIsAllPageRowsSelected()
+    );
+  };
+
+  useEffect(() => {
+    if (enableServerSide && totalPages > 0) {
+      table.setPageCount(totalPages);
+    }
+  }, [totalPages, enableServerSide, table]);
+
+  return {
+    table,
+    data,
+    loading,
+    isInitialLoad,
+    error,
+    totalItems,
+    totalPages,
+    currentPage,
+    searchValue,
+    setSearchValue,
+    handleDeleteRows,
+    refreshData,
+    getSelectedRows,
+    getAllSelectedRowIds,
+    toggleAllPageRowsSelected,
+    getIsAllPageRowsSelected,
+    getIsSomePageRowsSelected,
+    selectionStore,
+  };
+}

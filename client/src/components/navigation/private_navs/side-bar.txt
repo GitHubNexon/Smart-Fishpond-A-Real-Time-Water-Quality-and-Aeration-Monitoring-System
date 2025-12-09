@@ -1,0 +1,356 @@
+'use client';
+
+import React, { useState, useEffect, useRef } from 'react';
+import { useRouter, usePathname, useSearchParams } from 'next/navigation';
+import { RiMenuFold2Fill, RiMenuUnfold2Fill } from 'react-icons/ri';
+import {
+  FaUserShield,
+  FaMagnifyingGlass,
+  FaChartBar,
+  FaChartArea,
+  FaBook,
+} from 'react-icons/fa6';
+import { Ellipsis } from 'lucide-react';
+import { MdDashboard } from 'react-icons/md';
+import { useAuthCheck } from '@/hooks/use-auth-check.hooks';
+import Link from 'next/link';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import SidebarSkeleton from '@/components/splash/skeleton-pre-built/sidebar-skeleton';
+import { Settings, HelpCircle, Search, ChevronDown } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
+import SideBarProfile from './side-bar-profile';
+import SearchDialog from '@/components/customs/search-dialog';
+import { routesByCategory, RouteCategory } from '@/utils/route-constants';
+
+interface MenuItems {
+  path: string;
+  icon: React.ReactNode;
+  label: string;
+  role: string[];
+  dropdownCategory?: RouteCategory;
+}
+
+interface TooltipWrapperProps {
+  children: React.ReactNode;
+  content: string;
+  isOpen: boolean;
+}
+
+const TooltipWrapper: React.FC<TooltipWrapperProps> = ({
+  children,
+  content,
+  isOpen,
+}) => {
+  if (isOpen) {
+    return <>{children}</>;
+  }
+
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>{children}</TooltipTrigger>
+      <TooltipContent side="right">
+        <p>{content}</p>
+      </TooltipContent>
+    </Tooltip>
+  );
+};
+
+export default function SideBar() {
+  const [mounted, setMounted] = useState<boolean>(false);
+  const { user } = useAuthCheck();
+  const [isOpen, setIsOpen] = useState<boolean>(true);
+  const sidebarRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const [searchOpen, setSearchOpen] = useState<boolean>(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutSide = (event: MouseEvent) => {
+      if (
+        sidebarRef.current &&
+        !sidebarRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutSide);
+    return () => document.removeEventListener('mousedown', handleClickOutSide);
+  }, []);
+
+  const hasAccess = (requiredRoles: string[]) => {
+    if (!user?.roleId.role) return false;
+    return requiredRoles.includes(user.roleId.role);
+  };
+
+  const isActiveRoute = (path: string) => {
+    if (path.includes('?')) {
+      const [basePath, query] = path.split('?');
+      const params = new URLSearchParams(query);
+      const tabParam = params.get('tab');
+
+      return pathname === basePath && searchParams.get('tab') === tabParam;
+    }
+    return pathname === path;
+  };
+
+  const isMenuItemActive = (path: string, category?: RouteCategory) => {
+    if (category) {
+      const categoryRoutes = routesByCategory[category];
+      return categoryRoutes.some((route) => isActiveRoute(route.value));
+    }
+    return pathname === path;
+  };
+
+  const menuItems: MenuItems[] = [
+    {
+      path: '/admin',
+      icon: <FaUserShield />,
+      label: 'Administrator',
+      role: ['Administrator', 'Moderator', 'Asset Custodian'],
+      dropdownCategory: 'admin',
+    },
+    {
+      path: '/management',
+      icon: <FaBook />,
+      label: 'Management',
+      role: ['Moderator', 'Administrator', 'Asset Custodian'],
+      dropdownCategory: 'management',
+    },
+    {
+      path: '/monitoring',
+      icon: <FaMagnifyingGlass />,
+      label: 'Monitoring',
+      role: ['Moderator', 'Administrator', 'User', 'Asset Custodian'],
+      dropdownCategory: 'monitoring',
+    },
+    {
+      path: '/analytics',
+      icon: <FaChartArea />,
+      label: 'Analytics',
+      role: ['Moderator', 'Administrator', 'User', 'Asset Custodian'],
+      dropdownCategory: 'analytics',
+    },
+    {
+      path: '/reports',
+      icon: <FaChartBar />,
+      label: 'Reports',
+      role: ['Moderator', 'Administrator', 'Asset Custodian'],
+      dropdownCategory: 'reports',
+    },
+  ];
+
+  const renderMenuItem = (item: MenuItems) => {
+    const isActive = isMenuItemActive(item.path, item.dropdownCategory);
+    const baseClasses = `cursor-pointer flex items-center space-x-3 p-2 rounded-md transition-colors duration-200 ${
+      isActive
+        ? 'text-black bg-sidebar-accent dark:bg-sidebar-primary text-[0.8em]'
+        : 'text-black dark:text-black hover:bg-zinc-300 hover:text-black dark:hover:bg-zinc-200 dark:hover:text-black bg-white text-[0.8em]'
+    } ${isOpen ? 'pl-5' : 'justify-center'}`;
+
+    if (item.dropdownCategory) {
+      const dropdownItems = routesByCategory[item.dropdownCategory];
+
+      return (
+        <DropdownMenu>
+          <TooltipWrapper content={item.label} isOpen={isOpen}>
+            <DropdownMenuTrigger asChild>
+              <button className={`${baseClasses} w-full`}>
+                <div
+                  className={`flex items-center justify-center ${
+                    isOpen ? 'mr-3' : ''
+                  }`}
+                >
+                  {item.icon}
+                </div>
+                {isOpen && (
+                  <>
+                    <span
+                      className={`flex-1 text-left transition-all duration-500 ${
+                        isOpen
+                          ? 'opacity-100 translate-x-0'
+                          : 'opacity-0 -translate-x-4 w-0'
+                      }`}
+                      style={{ transitionDelay: isOpen ? '150ms' : '0ms' }}
+                    >
+                      {item.label}
+                    </span>
+                    <Ellipsis
+                      className={`h-4 w-4 transition-all duration-500 ${
+                        isOpen
+                          ? 'opacity-100 translate-x-0'
+                          : 'opacity-0 translate-x-4 w-0'
+                      }`}
+                      style={{ transitionDelay: isOpen ? '150ms' : '0ms' }}
+                    />
+                  </>
+                )}
+              </button>
+            </DropdownMenuTrigger>
+          </TooltipWrapper>
+          <DropdownMenuContent
+            align={isOpen ? 'start' : 'center'}
+            className="w-56"
+          >
+            {dropdownItems.map((dropdownItem) => (
+              <DropdownMenuItem
+                key={dropdownItem.value}
+                onClick={() => router.push(dropdownItem.value)}
+                className={`cursor-pointer ${
+                  isActiveRoute(dropdownItem.value) ? 'bg-accent' : ''
+                }`}
+              >
+                {dropdownItem.label}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      );
+    }
+
+    return (
+      <TooltipWrapper content={item.label} isOpen={isOpen}>
+        <Link href={item.path} className={baseClasses}>
+          <div
+            className={`flex items-center justify-center ${
+              isOpen ? 'mr-3' : ''
+            }`}
+          >
+            {item.icon}
+          </div>
+          {isOpen && <span>{item.label}</span>}
+        </Link>
+      </TooltipWrapper>
+    );
+  };
+
+  const renderBottomButton = (
+    icon: React.ReactElement,
+    label: string,
+    onClick: () => void,
+  ) => (
+    <TooltipWrapper content={label} isOpen={isOpen}>
+      <Button
+        variant="default"
+        className={`text-white bg-transparent hover:bg-neutral-700 cursor-pointer w-full justify-start px-4 py-2 rounded-md transition-colors duration-200 ${
+          isOpen ? 'pl-5' : 'justify-center'
+        }`}
+        onClick={onClick}
+      >
+        {React.cloneElement(icon, {
+          className: `h-4 w-4 ${isOpen ? 'mr-2' : ''}`,
+        } as any)}
+        {isOpen && <span className="text-[0.8em]">{label}</span>}
+      </Button>
+    </TooltipWrapper>
+  );
+
+  return (
+    <>
+      <TooltipProvider>
+        {!mounted ? (
+          <SidebarSkeleton isOpen={isOpen} />
+        ) : (
+          <div
+            className={`flex ${
+              isOpen ? 'w-64' : 'w-20'
+            } h-full transition-all duration-500 ease-in-out bg-gradient-to-br from-background to-muted/20`}
+          >
+            <div
+              ref={sidebarRef}
+              className="bg-primary dark:bg-secondary text-accent dark:text-white p-5 space-y-6 shadow-lg flex flex-col w-full relative h-full overflow-y-auto"
+            >
+              {/* Toggle */}
+              <TooltipWrapper content="Open Menu" isOpen={isOpen}>
+                <button
+                  onClick={() => setIsOpen(!isOpen)}
+                  className="text-black dark:text-white text-2xl mb-6 cursor-resize flex-shrink-0"
+                >
+                  {isOpen ? (
+                    <div className="flex justify-end cursor-pointer">
+                      <RiMenuFold2Fill />
+                    </div>
+                  ) : (
+                    <div className="flex justify-center cursor-pointer">
+                      <RiMenuUnfold2Fill />
+                    </div>
+                  )}
+                </button>
+              </TooltipWrapper>
+
+              {/* Dashboard */}
+              <div className="mb-4 flex-shrink-0">
+                <TooltipWrapper content="Dashboard" isOpen={isOpen}>
+                  <Link
+                    href="/dashboard"
+                    className={`flex items-center space-x-3 p-2 rounded-md transition-colors duration-200 ${
+                      pathname === '/dashboard'
+                        ? 'text-black bg-sidebar-accent dark:bg-sidebar-primary text-[0.8em]'
+                        : ' text-black dark:text-black hover:bg-zinc-300 hover:text-black dark:hover:bg-zinc-200 dark:hover:text-black bg-white text-[0.8em]'
+                    } ${isOpen ? 'pl-5' : 'justify-center'}`}
+                  >
+                    <div
+                      className={`flex items-center justify-center ${
+                        isOpen ? 'mr-3' : ''
+                      }`}
+                    >
+                      <MdDashboard />
+                    </div>
+                    {isOpen && <span>Dashboard</span>}
+                  </Link>
+                </TooltipWrapper>
+              </div>
+
+              {/* Menu Items */}
+              <div className="space-y-4 flex-shrink-0">
+                {menuItems.map(
+                  (item) =>
+                    hasAccess(item.role) && (
+                      <div key={item.path}>{renderMenuItem(item)}</div>
+                    ),
+                )}
+              </div>
+
+              {/* Bottom section */}
+              <div className="mt-auto flex flex-col space-y-2 flex-shrink-0">
+                {renderBottomButton(<Settings />, 'Settings', () =>
+                  router.push('/settings'),
+                )}
+                {renderBottomButton(<HelpCircle />, 'Get Help', () =>
+                  router.push('/help'),
+                )}
+                {renderBottomButton(<Search />, 'Search', () =>
+                  setSearchOpen(true),
+                )}
+
+                <Separator className="my-2" />
+                <SideBarProfile isOpen={isOpen} />
+              </div>
+            </div>
+          </div>
+        )}
+      </TooltipProvider>
+
+      {searchOpen && (
+        <SearchDialog open={searchOpen} onOpenChange={setSearchOpen} />
+      )}
+    </>
+  );
+}

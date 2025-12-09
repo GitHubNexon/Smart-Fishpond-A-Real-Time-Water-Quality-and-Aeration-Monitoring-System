@@ -1,0 +1,718 @@
+i have this one how to make an structured emebeding data for this 
+
+wehere  can structure example here my employees, asset, inventory 
+
+entites 
+
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  PrimaryColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+  VersionColumn,
+  BeforeInsert,
+  DeleteDateColumn,
+  OneToMany,
+  ManyToOne,
+  JoinColumn,
+  OneToOne,
+} from 'typeorm';
+import { v7 as uuidv7 } from 'uuid';
+import { User } from 'src/modules/users/entities/user.entity';
+import { AssetInventory } from 'src/modules/assets/entities/asset-inventory.entity';
+import { BaseEntityWithDates } from 'src/shared/dates/base-entity-with-dates';
+import { DateTimeTransformer } from 'src/shared/dates/date-time.transformer';
+
+@Entity('employees')
+export class Employee extends BaseEntityWithDates {
+  @PrimaryColumn('uuid')
+  id: string;
+
+  @BeforeInsert()
+  generateId() {
+    if (!this.id) {
+      this.id = uuidv7();
+    }
+  }
+
+  @OneToOne(() => User, (user) => user.employeeId)
+  user: User;
+
+  @OneToMany(() => AssetInventory, (inventory) => inventory.custodian)
+  issuedAsset: AssetInventory[];
+
+  @Column({
+    name: 'employee_id',
+    type: 'varchar',
+    length: 20,
+    unique: true,
+  })
+  employeeId: string;
+
+  @Column({ name: 'first_name', type: 'varchar', nullable: false })
+  firstName: string;
+
+  @Column({ name: 'middle_name', type: 'varchar', nullable: true })
+  middleName: string;
+
+  @Column({ name: 'last_name', type: 'varchar', nullable: false })
+  lastName: string;
+
+  @Column({
+    name: 'email',
+    type: 'varchar',
+    nullable: false,
+    unique: true,
+    transformer: {
+      to: (value: string) => value.trim().toLowerCase(),
+      from: (value: string) => value,
+    },
+  })
+  email: string;
+
+  @Column({
+    name: 'contact_number',
+    type: 'varchar',
+    length: 20,
+    nullable: false,
+  })
+  contactNumber: string;
+
+  @Column({
+    name: 'position',
+    type: 'varchar',
+    length: 50,
+    nullable: false,
+  })
+  position: string;
+
+  @Column({
+    name: 'department',
+    type: 'varchar',
+    length: 50,
+    nullable: false,
+  })
+  department: string;
+
+  @Column({ type: 'boolean', default: false, name: 'is_verified' })
+  isVerified: boolean;
+
+  // @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
+  // createdAt: Date;
+
+  // @UpdateDateColumn({ name: 'updated_at', type: 'timestamptz' })
+  // updatedAt: Date;import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  PrimaryColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+  VersionColumn,
+  BeforeInsert,
+  DeleteDateColumn,
+  OneToMany,
+  ManyToOne,
+  JoinColumn,
+  OneToOne,
+} from 'typeorm';
+import { v7 as uuidv7 } from 'uuid';
+import { User } from 'src/modules/users/entities/user.entity';
+import { AssetInventory } from 'src/modules/assets/entities/asset-inventory.entity';
+import { BaseEntityWithDates } from 'src/shared/dates/base-entity-with-dates';
+import { DateTimeTransformer } from 'src/shared/dates/date-time.transformer';
+
+@Entity('employees')
+export class Employee extends BaseEntityWithDates {
+  @PrimaryColumn('uuid')
+  id: string;
+
+  @BeforeInsert()
+  generateId() {
+    if (!this.id) {
+      this.id = uuidv7();
+    }
+  }
+
+  @OneToOne(() => User, (user) => user.employeeId)
+  user: User;
+
+  @OneToMany(() => AssetInventory, (inventory) => inventory.custodian)
+  issuedAsset: AssetInventory[];
+
+  @Column({
+    name: 'employee_id',
+    type: 'varchar',
+    length: 20,
+    unique: true,
+  })
+  employeeId: string;
+
+  @Column({ name: 'first_name', type: 'varchar', nullable: false })
+  firstName: string;
+
+  @Column({ name: 'middle_name', type: 'varchar', nullable: true })
+  middleName: string;
+
+  @Column({ name: 'last_name', type: 'varchar', nullable: false })
+  lastName: string;
+
+  @Column({
+    name: 'email',
+    type: 'varchar',
+    nullable: false,
+    unique: true,
+    transformer: {
+      to: (value: string) => value.trim().toLowerCase(),
+      from: (value: string) => value,
+    },
+  })
+  email: string;
+
+  @Column({
+    name: 'contact_number',
+    type: 'varchar',
+    length: 20,
+    nullable: false,
+  })
+  contactNumber: string;
+
+  @Column({
+    name: 'position',
+    type: 'varchar',
+    length: 50,
+    nullable: false,
+  })
+  position: string;
+
+  @Column({
+    name: 'department',
+    type: 'varchar',
+    length: 50,
+    nullable: false,
+  })
+  department: string;
+
+  @Column({ type: 'boolean', default: false, name: 'is_verified' })
+  isVerified: boolean;
+
+  // @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
+  // createdAt: Date;
+
+  // @UpdateDateColumn({ name: 'updated_at', type: 'timestamptz' })
+  // updatedAt: Date;
+
+  @VersionColumn({ name: 'version' })
+  version: number;
+
+  @DeleteDateColumn({
+    name: 'deleted_at',
+    type: 'timestamptz',
+    nullable: true,
+    transformer: DateTimeTransformer,
+  })
+  deletedAt?: Date;
+}
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  PrimaryColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+  VersionColumn,
+  BeforeInsert,
+  DeleteDateColumn,
+  OneToMany,
+  OneToOne,
+  ManyToOne,
+  JoinColumn,
+} from 'typeorm';
+import { v7 as uuidv7 } from 'uuid';
+import { Assets } from './asset.entity';
+import { Employee } from 'src/modules/employee/entities/employee.entity';
+import { AssetTransactions } from './asset-transaction.entity';
+import { BaseEntityWithDates } from 'src/shared/dates/base-entity-with-dates';
+import { DateTimeTransformer } from 'src/shared/dates/date-time.transformer';
+
+export enum InventoryStatus {
+  // New asset lifecycle
+  NewAvailable = 'New-Available', // brand new, no history
+  Available = 'Available', // in inventory, ready to issue
+  ForIssuance = 'For-Issuance', // reserved for issuance (approval pending)
+  Issued = 'Issued', // approved and issued
+  ReturnedToCustodian = 'Returned-To-Custodian', // returned after use
+
+  // Maintenance / repair lifecycle
+  // ReturnedForRepair = 'Returned-For-Repair', // returned for repair if user has it
+  ForRepair = 'For-Repair', // under repair approval/pending
+  Repaired = 'Repaired', // repair completed
+  RepairFailed = 'Repair-Failed', // cannot repair
+
+  // Disposal lifecycle
+  ReturnedForDisposal = 'Returned-For-Disposal', // returned for disposal if user has it
+  ForDisposal = 'For-Disposal', // pending disposal approval
+  Disposed = 'Disposed', // disposal completed
+  Deprecated = 'Deprecated', // no longer in use
+
+  // Transfer lifecycle
+  ForTransfer = 'For-Transfer', // pending transfer
+  Transferred = 'Transferred', // successfully transferred
+  TransferRejected = 'Transfer-Rejected', // transfer denied
+
+  // Exceptional states
+  Lost = 'Lost', // permanently lost
+  Stolen = 'Stolen', // permanently stolen
+  Recovered = 'Recovered', // recovered from lost or stolen
+}
+
+@Entity('assets_inventory')
+export class AssetInventory extends BaseEntityWithDates {
+  @PrimaryColumn('uuid')
+  id: string;
+
+  @BeforeInsert()
+  generateId() {
+    if (!this.id) {
+      this.id = uuidv7();
+    }
+  }
+  // Relationship: Many inventories → One Asset
+  @ManyToOne(() => Assets, (asset) => asset.inventories, {
+    eager: true,
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'asset_id' })
+  asset: Assets;
+
+  // @OneToMany(() => AssetTransactions, (transaction) => transaction.inventory, {
+  //   lazy: true,
+  // })
+  // transactions: Promise<AssetTransactions[]>;
+
+  @OneToMany(() => AssetTransactions, (transaction) => transaction.inventory, {
+    eager: false, // not eager
+  })
+  transactions: AssetTransactions[];
+
+  @ManyToOne(() => Employee, (employee) => employee.issuedAsset, {
+    eager: true,
+    nullable: true,
+  })
+  @JoinColumn({ name: 'custodian_id' })
+  custodian: Employee | null;
+
+  @Column({
+    name: 'inv_no',
+    type: 'varchar',
+    unique: true,
+    nullable: false,
+  })
+  inventoryNo: string;
+
+  @Column({
+    name: 'qr_code',
+    type: 'text',
+    unique: true,
+    nullable: true,
+  })
+  qrCode: string;
+
+  @Column({
+    name: 'bar_code',
+    type: 'text',
+    unique: true,
+    nullable: true,
+  })
+  barCode: string;
+
+  @Column({
+    name: 'rfid_tag',
+    type: 'text',
+    unique: true,
+    nullable: true,
+  })
+  rfidTag: string;
+
+  @Column({
+    name: 'location',
+    type: 'text',
+    nullable: true,
+  })
+  location: string;
+
+  @Column({ type: 'boolean', default: true })
+  isDraft: boolean; // true = template / editable, false = finalized
+
+  @Column({
+    type: 'enum',
+    enum: InventoryStatus,
+    default: InventoryStatus.NewAvailable,
+  })
+  status: InventoryStatus;
+
+  // @CreateDateColumn({ name: 'created_at', type: 'timestamptz' }) //auto
+  // createdAt: Date;
+
+  // // new columns
+  // @UpdateDateColumn({ name: 'updated_at', type: 'timestamptz' })
+  // updatedAt: Date;
+}
+
+
+For this chatbot ??
+
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  PrimaryColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+  VersionColumn,
+  BeforeInsert,
+  DeleteDateColumn,
+  OneToMany,
+  ManyToOne,
+  JoinColumn,
+  OneToOne,
+} from 'typeorm';
+import { v7 as uuidv7 } from 'uuid';
+import { User } from 'src/modules/users/entities/user.entity';
+import { BaseEntityWithDates } from 'src/shared/dates/base-entity-with-dates';
+import { DateTimeTransformer } from 'src/shared/dates/date-time.transformer';
+
+@Entity('chat_sessions')
+export class ChatSession extends BaseEntityWithDates {
+  @PrimaryColumn('uuid')
+  id: string;
+
+  @BeforeInsert()
+  generateId() {
+    if (!this.id) {
+      this.id = uuidv7();
+    }
+  }
+
+  @ManyToOne(() => User, { eager: true, nullable: true, onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'sender_id' })
+  sender: User;
+
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  title: string;
+
+  @OneToMany(() => ChatMessage, (msg) => msg.session)
+  messages: ChatMessage[];
+}
+
+@Entity('chat_messages')
+export class ChatMessage extends BaseEntityWithDates {
+  @PrimaryColumn('uuid')
+  id: string;
+
+  @BeforeInsert()
+  generateId() {
+    if (!this.id) {
+      this.id = uuidv7();
+    }
+  }
+
+  @ManyToOne(() => ChatSession, (session) => session.messages, {
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'session_id' })
+  session: ChatSession;
+
+  @Column()
+  session_id: number;
+
+  @Column({ type: 'varchar', length: 10 })
+  role: 'user' | 'assistant' | 'system';
+
+  @Column({ type: 'text' })
+  content: string;
+
+  @Column({ type: 'jsonb', nullable: true })
+  metadata: Record<string, any>; // e.g., source_table, snippet, token_count
+}
+
+@Entity('chat_embeddings')
+export class ChatEmbedding extends BaseEntityWithDates {
+  @PrimaryColumn('uuid')
+  id: string;
+
+  @BeforeInsert()
+  generateId() {
+    if (!this.id) {
+      this.id = uuidv7();
+    }
+  }
+
+  @ManyToOne(() => ChatMessage, (msg) => msg.id, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'message_id' })
+  message: ChatMessage;
+
+  @Column()
+  message_id: number;
+
+  @Column({ type: 'text' })
+  content: string; // text used to create embedding
+
+  // CHANGED: Using JSONB instead of vector type (no pgvector needed)
+  @Column({ type: 'jsonb', nullable: false })
+  embedding: number[]; // stored as JSON array
+
+  @Column({ type: 'varchar', length: 50, nullable: true })
+  source_table: string; // optional, e.g., 'assets', 'issuances'
+
+  @Column({ type: 'int', nullable: true })
+  source_id: number; // optional, link to original record
+}
+
+
+my helper of config 
+
+// src/modules/ai-chat/helpers/chat-bot.helper.ts
+import Replicate from 'replicate';
+
+export interface ChatBotConfig {
+  systemPrompt: string;
+  maxTokens: number;
+  minTokens: number;
+  temperature: number;
+  topP: number;
+  topK: number;
+  stopSequences: string[];
+  lengthPenalty: number;
+  presencePenalty: number;
+  seed?: number;
+  maxNewTokens: number;
+  minNewTokens: number;
+  logPerformanceMetrics: boolean;
+}
+
+export const DEFAULT_CHATBOT_CONFIG: ChatBotConfig = {
+  systemPrompt:
+    'You are a helpful, friendly AI assistant. Provide clear, concise, and informative responses. Be conversational and engaging while maintaining accuracy.',
+  maxTokens: 512,
+  minTokens: 0,
+  temperature: 0.7,
+  topP: 0.9,
+  topK: 50,
+  stopSequences: [],
+  lengthPenalty: 1.0,
+  presencePenalty: 0.0,
+  seed: undefined,
+  maxNewTokens: 512,
+  minNewTokens: 0,
+  logPerformanceMetrics: true,
+};
+
+export interface ChatMessage {
+  role: 'user' | 'assistant' | 'system';
+  content: string;
+}
+
+export interface ChatBotResponse {
+  content: string;
+  metadata: {
+    tokensUsed?: number;
+    modelUsed: string;
+    timestamp: Date;
+    performance?: any;
+  };
+}
+
+export class ChatBotHelper {
+  private replicate: Replicate;
+  private model: `${string}/${string}` | `${string}/${string}:${string}`;
+  private config: ChatBotConfig;
+
+  constructor(
+    apiToken: string,
+    model:
+      | `${string}/${string}`
+      | `${string}/${string}:${string}` = 'meta/meta-llama-3-8b-instruct',
+    config: Partial<ChatBotConfig> = {},
+  ) {
+    this.replicate = new Replicate({
+      auth: apiToken,
+    });
+    this.model = model;
+    this.config = { ...DEFAULT_CHATBOT_CONFIG, ...config };
+  }
+
+  /**
+   * Build conversation prompt with full conversation history for context awareness
+   */
+  private buildPromptWithHistory(messages: ChatMessage[]): string {
+    const systemMessage =
+      messages.find((m) => m.role === 'system')?.content ||
+      this.config.systemPrompt;
+
+    // Build full conversation context
+    const conversationHistory = messages
+      .filter((m) => m.role !== 'system')
+      .map((m) => {
+        const role = m.role === 'user' ? 'user' : 'assistant';
+        return `<|start_header_id|>${role}<|end_header_id|>\n\n${m.content}<|eot_id|>`;
+      })
+      .join('');
+
+    return `<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\n${systemMessage}<|eot_id|>${conversationHistory}<|start_header_id|>assistant<|end_header_id|>\n\n`;
+  }
+
+  /**
+   * Send a chat message and get complete response from Replicate
+   */
+  async chat(
+    messages: ChatMessage[],
+    options: Partial<ChatBotConfig> = {},
+  ): Promise<ChatBotResponse> {
+    const startTime = Date.now();
+    const mergedConfig = { ...this.config, ...options };
+
+    try {
+      const prompt = this.buildPromptWithHistory(messages);
+
+      const input: any = {
+        prompt: prompt,
+        max_tokens: mergedConfig.maxTokens,
+        min_tokens: mergedConfig.minTokens,
+        temperature: mergedConfig.temperature,
+        top_p: mergedConfig.topP,
+        top_k: mergedConfig.topK,
+        length_penalty: mergedConfig.lengthPenalty,
+        presence_penalty: mergedConfig.presencePenalty,
+      };
+
+      if (mergedConfig.seed) {
+        input.seed = mergedConfig.seed;
+      }
+
+      const output = await this.replicate.run(this.model, { input });
+
+      // Collect full response
+      let fullResponse = '';
+      for await (const chunk of output as any) {
+        if (typeof chunk === 'string') {
+          fullResponse += chunk;
+        }
+      }
+
+      const endTime = Date.now();
+      const responseTime = endTime - startTime;
+
+      return {
+        content: fullResponse.trim(),
+        metadata: {
+          modelUsed: this.model,
+          timestamp: new Date(),
+          ...(this.config.logPerformanceMetrics && {
+            performance: {
+              responseTimeMs: responseTime,
+              tokensUsed: this.estimateTokens(fullResponse),
+            },
+          }),
+        },
+      };
+    } catch (error) {
+      throw new Error(`Replicate API error: ${error.message}`);
+    }
+  }
+
+  /**
+   * Generate a dynamic title for a chat session based on the first message
+   */
+  async generateSessionTitle(firstMessage: string): Promise<string> {
+    try {
+      const titlePrompt: ChatMessage[] = [
+        {
+          role: 'system',
+          content:
+            "You are a helpful assistant that creates short, descriptive titles (3-6 words) for chat conversations based on the user's first message. Only respond with the title, nothing else.",
+        },
+        {
+          role: 'user',
+          content: `Generate a short, descriptive title for a chat that starts with: "${firstMessage}"`,
+        },
+      ];
+
+      const response = await this.chat(titlePrompt, {
+        maxTokens: 50,
+        temperature: 0.7,
+      });
+
+      // Clean and truncate the title
+      let title = response.content
+        .trim()
+        .replace(/^["']|["']$/g, '') // Remove quotes
+        .replace(/^Title:\s*/i, '') // Remove "Title:" prefix
+        .substring(0, 100); // Max 100 chars
+
+      return title || 'New Chat';
+    } catch (error) {
+      console.error('Failed to generate title:', error);
+      return 'New Chat';
+    }
+  }
+
+  /**
+   * Simple token estimation (rough approximation)
+   */
+  private estimateTokens(text: string): number {
+    return Math.ceil(text.split(/\s+/).length * 1.3);
+  }
+
+  /**
+   * Generate embeddings for text
+   */
+  async generateEmbedding(text: string): Promise<number[]> {
+    try {
+      const embeddingModel: `${string}/${string}` =
+        'replicate/all-mpnet-base-v2';
+      const output = await this.replicate.run(embeddingModel, {
+        input: { text },
+      });
+
+      return output as number[];
+    } catch (error) {
+      throw new Error(`Embedding generation error: ${error.message}`);
+    }
+  }
+
+  /**
+   * Update configuration
+   */
+  updateConfig(config: Partial<ChatBotConfig>): void {
+    this.config = { ...this.config, ...config };
+  }
+
+  /**
+   * Get current configuration
+   */
+  getConfig(): ChatBotConfig {
+    return { ...this.config };
+  }
+}
+
+
+
+
+where i can ask "Items given to this employee [employeeId] or the full name  this quarter"
+
+  @VersionColumn({ name: 'version' })
+  version: number;
+
+  @DeleteDateColumn({
+    name: 'deleted_at',
+    type: 'timestamptz',
+    nullable: true,
+    transformer: DateTimeTransformer,
+  })
+  deletedAt?: Date;
+}
+
+

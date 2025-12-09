@@ -1,0 +1,34 @@
+role = Moderator
+email = moderator@mail.com
+password = @Moderator#321
+passkey = 123456
+
+role = Administrator
+email = admin@mail.com
+password = @SysAdmin#321
+passkey = 123456
+
+role = Employee
+email = employee@mail.com
+password = @Employee#321
+passkey = 123456
+
+role = HR-Administrator
+email = hradmin@mail.com
+password = @HRAdmin#321
+passkey = 123456
+
+role = HR-Manager
+email = hrmanager@mail.com
+password = @HRManager#321
+passkey = 123456
+
+role = HR-Staff
+email = hrstaff@mail.com
+password = @HRStaff#321
+passkey = 123456
+
+role = Accountant
+email = accountant@mail.com
+password = @Accountant#321
+passkey = 123456
