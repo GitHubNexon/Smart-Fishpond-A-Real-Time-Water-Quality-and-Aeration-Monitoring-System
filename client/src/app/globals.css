@@ -205,3 +205,26 @@
   height: 12px; /* height for horizontal scrollbar */
 }
 
+::-webkit-scrollbar-track {
+  background: var(--background); /* use your theme background */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--muted); /* scrollbar handle color */
+  border-radius: var(--radius); /* rounded corners */
+  border: 3px solid var(--background); /* padding effect */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--accent); /* hover color */
+}
+
+::-webkit-scrollbar-corner {
+  background: var(--background); /* corner where x and y meet */
+}
+
+/* Optional: For Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--muted) var(--background);
+}

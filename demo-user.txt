@@ -8,27 +8,19 @@ email = admin@mail.com
 password = @SysAdmin#321
 passkey = 123456
 
-role = Employee
-email = employee@mail.com
-password = @Employee#321
+role = Researcher
+email = researcher.demo@mail.com
+password = @Researcher#321
 passkey = 123456
 
-role = HR-Administrator
-email = hradmin@mail.com
-password = @HRAdmin#321
+
+role = Fishpond-Operator
+email = fishpondoperator.demo@mail.com
+password = @FishPondOperator#321
 passkey = 123456
 
-role = HR-Manager
-email = hrmanager@mail.com
-password = @HRManager#321
-passkey = 123456
 
-role = HR-Staff
-email = hrstaff@mail.com
-password = @HRStaff#321
-passkey = 123456
-
-role = Accountant
-email = accountant@mail.com
-password = @Accountant#321
+role = Monitoring-Manager
+email = monitoringmanager.demo@mail.com
+password = @MonitoringManager#321
 passkey = 123456

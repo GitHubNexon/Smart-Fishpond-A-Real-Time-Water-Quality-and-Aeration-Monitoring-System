@@ -19,6 +19,8 @@ import SearchDialog from '@/components/customs/search-dialog';
 import {
   ResearcherMenuItems,
   AdministrativeMenuItems,
+  FishPondOperatorMenutItems,
+  MonitoringManagerMenutItems,
 } from './tab-side-bar.menu';
 
 interface MenuItems {
@@ -105,6 +107,9 @@ export default function TabSideBar({ isOpen, onClose }: TabSideBarProps) {
     if (['Administrator', 'Moderator', 'User'].includes(role))
       return AdministrativeMenuItems;
     if (role === 'Researcher') return ResearcherMenuItems;
+    if (role === 'Fishpond-Operator') return FishPondOperatorMenutItems;
+    if (role === 'Monitoring-Manager') return MonitoringManagerMenutItems;
+
 
     return [];
   };

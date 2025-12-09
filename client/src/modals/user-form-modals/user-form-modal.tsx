@@ -104,7 +104,7 @@ const UserFormModal: React.FC<UserFormModalProps> = ({
                 selectedRole={formData.roleId} // Pass the selected role
               />
             </div>
-            <div className="flex flex-col space-y-2">
+            {/* <div className="flex flex-col space-y-2">
               <Label htmlFor="emp">Assign Employee</Label>
               <EmployeePicker
                 value={formData.employeeId}
@@ -115,7 +115,7 @@ const UserFormModal: React.FC<UserFormModalProps> = ({
                   }))
                 }
               />
-            </div>
+            </div> */}
             <div className="flex flex-col space-y-2">
               <Label htmlFor="fullname">Full Name</Label>
               <Input

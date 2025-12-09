@@ -42,22 +42,22 @@ const menuConfig = {
   adminUsers: {
     path: '/admin/users',
     label: 'Admin - Users',
-    role: ['Administrator', 'Moderator', 'Project-Manager'],
+    role: ['Administrator', 'Moderator', 'Researcher', 'Monitoring-Manager'],
   },
   adminRoles: {
     path: '/admin/roles',
     label: 'Admin - Roles',
-    role: ['Administrator', 'Moderator', 'Project-Manager'],
+    role: ['Administrator', 'Moderator', 'Researcher', 'Monitoring-Manager'],
   },
   adminPermissions: {
     path: '/admin/permissions',
     label: 'Admin - Permissions',
-    role: ['Administrator', 'Moderator', 'Project-Manager'],
+    role: ['Administrator', 'Moderator', 'Researcher', 'Monitoring-Manager'],
   },
   adminAuditLogs: {
     path: '/admin/audit-logs',
     label: 'Admin - System Audit Logs',
-    role: ['Administrator', 'Moderator', 'Project-Manager'],
+    role: ['Administrator', 'Moderator', 'Researcher', 'Monitoring-Manager'],
   },
 
   // new routes
@@ -112,12 +112,15 @@ export const AdministrativeMenuItems: MenuItems[] = createMenuItems([
 
 export const ResearcherMenuItems: MenuItems[] = createMenuItems([
   'dashboard',
+  'adminUsers',
+  'adminRoles',
+  'adminPermissions',
+  'adminAuditLogs',
   'temperatureMonitoring',
   'turbidityMonitoring',
   'phWaterMonitoring',
   'waterLevelMonitoring',
 ]);
-
 
 export const FishPondOperatorMenutItems: MenuItems[] = createMenuItems([
   'dashboard',
@@ -126,7 +129,6 @@ export const FishPondOperatorMenutItems: MenuItems[] = createMenuItems([
   'phWaterMonitoring',
   'waterLevelMonitoring',
 ]);
-
 
 export const MonitoringManagerMenutItems: MenuItems[] = createMenuItems([
   'dashboard',
@@ -139,4 +141,3 @@ export const MonitoringManagerMenutItems: MenuItems[] = createMenuItems([
   'phWaterMonitoring',
   'waterLevelMonitoring',
 ]);
-
