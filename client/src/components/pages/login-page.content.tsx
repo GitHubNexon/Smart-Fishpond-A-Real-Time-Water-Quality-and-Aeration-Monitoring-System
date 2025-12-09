@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation';
 import AuthForm from '@/components/forms/auth.form';
 import ClearLocalStorage from '@/components/customs/clear-localstorage';
 import { Card, CardContent } from '@/components/ui/card';
-import { Mail, FileText } from 'lucide-react';
+import { Activity, Wind, Bell } from 'lucide-react';
 
 const LoginPageContent = async () => {
   const cookieStore = await cookies();
@@ -36,39 +36,41 @@ const LoginPageContent = async () => {
           <div className="flex items-center gap-4">
             <img
               src="/images/hrm-logo.png"
-              alt="HRM Portal Logo"
+              alt="smart pond Logo"
               className="w-16 h-16 rounded-lg border-2 border-white/40 shadow-md"
             />
             <div>
               <h1 className="text-4xl font-bold text-gray-900 dark:text-white drop-shadow-sm">
-                HRM Portal
+                Smart Pond
               </h1>
               <p className="text-lg text-gray-600 dark:text-primary font-medium drop-shadow-sm">
-                Human Resource Management System
+                A Real-Time Water Quality and Aeration Monitoring System
               </p>
             </div>
           </div>
 
           {/* Description */}
           <p className="text-gray-700 dark:text-gray-200 max-w-md drop-shadow-md leading-relaxed">
-            Manage employee records, attendance, leave requests, and internal HR
-            processes efficiently with our centralized HRM system.
+            Manage and monitor your fishpond efficiently with Smart Fishpond, a
+            real-time system that tracks water quality and controls aeration to
+            maintain optimal conditions for aquatic life.
           </p>
 
           {/* Feature Cards */}
           <div className="space-y-4">
             <Card className="bg-chart-5/10 dark:bg-chart-5/20 border border-blue-400/20 rounded-2xl hover:bg-blue-500/20 transition">
-              <CardContent className="p-5 flex items-start gap-4">
+              <CardContent className="p-3 flex items-start gap-4">
                 <div className="p-2 bg-blue-600/30 rounded-lg">
-                  <FileText className="w-6 h-6 text-primary" />
+                  <Activity className="w-6 h-6 text-primary" />
                 </div>
                 <div>
                   <h3 className="font-semibold text-lg text-gray-900 dark:text-white">
-                    Employee Records
+                    Real-Time Water Monitoring
                   </h3>
                   <p className="text-gray-700 dark:text-gray-200 text-sm">
-                    View, update, and manage employee profiles, personal info,
-                    and HR documents securely.
+                    Continuously track water quality parameters like
+                    temperature, pH, and turbidity to ensure optimal fish
+                    health.
                   </p>
                 </div>
               </CardContent>
@@ -77,15 +79,32 @@ const LoginPageContent = async () => {
             <Card className="bg-chart-5/10 dark:bg-chart-5/20 border border-blue-400/20 rounded-2xl hover:bg-blue-500/20 transition">
               <CardContent className="p-5 flex items-start gap-4">
                 <div className="p-2 bg-blue-600/30 rounded-lg">
-                  <Mail className="w-6 h-6 text-primary" />
+                  <Wind className="w-6 h-6 text-primary" />
                 </div>
                 <div>
                   <h3 className="font-semibold text-lg text-gray-900 dark:text-white">
-                    Leave & Attendance
+                    Aeration Control
                   </h3>
                   <p className="text-gray-700 dark:text-gray-200 text-sm">
-                    Track attendance, approve leave requests, and monitor work
-                    schedules efficiently.
+                    Automatically manage aerators to maintain proper oxygen
+                    levels for a healthy aquatic environment.
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-chart-5/10 dark:bg-chart-5/20 border border-blue-400/20 rounded-2xl hover:bg-blue-500/20 transition">
+              <CardContent className="p-5 flex items-start gap-4">
+                <div className="p-2 bg-blue-600/30 rounded-lg">
+                  <Bell className="w-6 h-6 text-primary" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-lg text-gray-900 dark:text-white">
+                    Alerts & Notifications
+                  </h3>
+                  <p className="text-gray-700 dark:text-gray-200 text-sm">
+                    Receive instant alerts for critical water quality changes or
+                    equipment issues to take timely action.
                   </p>
                 </div>
               </CardContent>
@@ -110,9 +129,9 @@ const LoginPageContent = async () => {
         <div className="w-full max-w-md relative z-2">
           {/* Header */}
           <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold text-white">HRM Portal Login</h2>
-            <p className="text-sm text-blue-200/80 mt-2">
-              Access your HRM account to manage employees and HR tasks.
+            <h2 className="text-3xl font-bold ">Smart Pond Login</h2>
+            <p className="text-sm  mt-2">
+              Access your account to manage and monitor.
             </p>
           </div>
 
@@ -122,7 +141,6 @@ const LoginPageContent = async () => {
       </div>
     </div>
   );
-
 };
 
 export default LoginPageContent;
