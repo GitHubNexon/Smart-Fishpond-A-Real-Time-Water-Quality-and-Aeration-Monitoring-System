@@ -27,6 +27,7 @@ const getIconForLabel = (label: string): React.ReactNode => {
     'Turbidity Monitoring': <FaDroplet />,
     'ph Water Monitoring': <FaFlask />,
     'Water Level Monitoring': <FaGauge />,
+    'Dissolved Oxygen Monitoring': <FaGauge />,
   };
 
   return iconMap[label] || <FaClipboardList />;
@@ -84,6 +85,12 @@ const menuConfig = {
     label: 'Water Level Monitoring',
     role: [],
   },
+
+  dissolvedOxygen: {
+    path: '/do-monitoring',
+    label: 'Dissolved Oxygen Monitoring',
+    role: [],
+  },
 };
 
 // Helper function to create menu items with icons
@@ -108,6 +115,7 @@ export const AdministrativeMenuItems: MenuItems[] = createMenuItems([
   'turbidityMonitoring',
   'phWaterMonitoring',
   'waterLevelMonitoring',
+  'dissolvedOxygen',
 ]);
 
 export const ResearcherMenuItems: MenuItems[] = createMenuItems([
@@ -120,6 +128,7 @@ export const ResearcherMenuItems: MenuItems[] = createMenuItems([
   'turbidityMonitoring',
   'phWaterMonitoring',
   'waterLevelMonitoring',
+  'dissolvedOxygen',
 ]);
 
 export const FishPondOperatorMenutItems: MenuItems[] = createMenuItems([
@@ -128,6 +137,7 @@ export const FishPondOperatorMenutItems: MenuItems[] = createMenuItems([
   'turbidityMonitoring',
   'phWaterMonitoring',
   'waterLevelMonitoring',
+  'dissolvedOxygen',
 ]);
 
 export const MonitoringManagerMenutItems: MenuItems[] = createMenuItems([
@@ -140,4 +150,5 @@ export const MonitoringManagerMenutItems: MenuItems[] = createMenuItems([
   'turbidityMonitoring',
   'phWaterMonitoring',
   'waterLevelMonitoring',
+  'dissolvedOxygen',
 ]);
