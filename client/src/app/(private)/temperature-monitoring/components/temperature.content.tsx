@@ -215,7 +215,7 @@ export default function TemperatureContent() {
               ) : (
                 <Play className="w-4 h-4 mr-2" />
               )}
-              Start Simulation
+              Start Monitoring
             </Button>
           )}
         </div>
