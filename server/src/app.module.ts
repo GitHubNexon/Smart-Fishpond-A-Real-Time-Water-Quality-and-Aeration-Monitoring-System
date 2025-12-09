@@ -18,6 +18,7 @@ import { Session } from 'src/modules/auth/entities/session.entity';
 import { AuditLog } from 'src/modules/audit/entities/audit-log.entity';
 import { Notifications } from 'src/modules/notifications/entities/notification.entity';
 import { Mailer } from './modules/mailer/entities/mailer.entity';
+import { SensorsModule } from './modules/sensors/sensors.module';
 
 @Module({
   imports: [
@@ -57,6 +58,7 @@ import { Mailer } from './modules/mailer/entities/mailer.entity';
     ModulesModule,
     SharedModule,
     JwtGlobalModule,
+    SensorsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

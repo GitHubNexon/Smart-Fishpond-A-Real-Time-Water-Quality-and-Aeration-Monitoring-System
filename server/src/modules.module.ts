@@ -10,6 +10,7 @@ import { NotificationsModule } from './modules/notifications/notifications.modul
 import { SystemModule } from './modules/system/system.module';
 import { SmsModule } from './modules/sms/sms.module';
 import { MailerModule } from './modules/mailer/mailer.module';
+import { SensorsModule } from './modules/sensors/sensors.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { MailerModule } from './modules/mailer/mailer.module';
     SystemModule,
     SmsModule,
     MailerModule,
+    SensorsModule,
   ],
   exports: [
     HealthModule,
@@ -35,6 +37,7 @@ import { MailerModule } from './modules/mailer/mailer.module';
     SystemModule,
     SmsModule,
     MailerModule,
+    SensorsModule,
   ],
 })
 export class ModulesModule {}
