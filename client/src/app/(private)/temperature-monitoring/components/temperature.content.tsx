@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState, useMemo } from 'react';
+import { CartesianGrid, Line, LineChart, XAxis } from 'recharts';
 import { SocketContext } from '@/providers/socket-provider';
 import {
   startTemperatureSimulation,
@@ -16,6 +17,12 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import {
+  ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from '@/components/ui/chart';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -31,6 +38,13 @@ import {
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { formatDate } from '@syntaxsentinel/date-utils';
 
+const chartConfig = {
+  temperature: {
+    label: 'Temperature',
+    color: 'hsl(var(--chart-1))',
+  },
+} satisfies ChartConfig;
+
 export default function TemperatureContent() {
   const { socket } = useContext(SocketContext);
   const [currentTemp, setCurrentTemp] = useState<TemperatureData | null>(null);
@@ -39,6 +53,20 @@ export default function TemperatureContent() {
   const [status, setStatus] = useState<'optimal' | 'low' | 'high'>('optimal');
   const [loading, setLoading] = useState<boolean>(false);
   const [isSimulationRunning, setIsSimulationRunning] = useState(false);
+
+  // Prepare chart data from temperature history
+  const chartData = useMemo(() => {
+    return tempHistory
+      .slice()
+      .reverse()
+      .map((reading, index) => {
+        return {
+          timestamp: formatDate.readableDateTime(reading.timestamp),
+          temperature: Number(reading.temperature),
+          index: index,
+        };
+      });
+  }, [tempHistory]);
 
   useEffect(() => {
     if (!socket) return;
@@ -223,7 +251,9 @@ export default function TemperatureContent() {
             <div className="space-y-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <div className={`text-6xl font-bold ${getStatusColor()}`}>
+                  <div
+                    className={`text-6xl max-sm:text-2xl font-bold ${getStatusColor()}`}
+                  >
                     {currentTemp.temperature}°C
                   </div>
                   <div className="flex items-center gap-2 mt-2">
@@ -283,6 +313,78 @@ export default function TemperatureContent() {
         </CardContent>
       </Card>
 
+      {/* Temperature Chart */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Activity className="w-5 h-5" />
+            Temperature Trend
+          </CardTitle>
+          <CardDescription>
+            Real-time temperature visualization (last 20 readings)
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="px-2 sm:p-6">
+          {chartData.length > 0 ? (
+            <ChartContainer
+              config={chartConfig}
+              className="aspect-auto h-[150px] w-full"
+            >
+              <LineChart
+                accessibilityLayer
+                data={chartData}
+                margin={{
+                  left: 12,
+                  right: 12,
+                }}
+              >
+                <CartesianGrid vertical={false} />
+                <XAxis
+                  dataKey="timestamp"
+                  tickLine={false}
+                  axisLine={false}
+                  tickMargin={8}
+                  minTickGap={32}
+                  tick={{ fontSize: 12 }}
+                />
+                <ChartTooltip
+                  content={
+                    <ChartTooltipContent
+                      className="w-[180px]"
+                      formatter={(value, name, props) => {
+                        const temp = Number(value);
+                        return [`${temp.toFixed(2)}°C`, 'Temperature'];
+                      }}
+                    />
+                  }
+                />
+                <Line
+                  dataKey="temperature"
+                  type="monotone"
+                  stroke="#3b82f6"
+                  strokeWidth={3}
+                  dot={{
+                    fill: '#3b82f6',
+                    r: 4,
+                  }}
+                  activeDot={{
+                    r: 6,
+                    fill: '#2563eb',
+                  }}
+                />
+              </LineChart>
+            </ChartContainer>
+          ) : (
+            <div className="text-center py-12 text-muted-foreground">
+              <p>No data available for chart</p>
+              <p className="text-sm mt-2">
+                Start monitoring to see temperature trends
+              </p>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
       {/* Temperature History */}
       <Card>
         <CardHeader>
@@ -306,12 +408,12 @@ export default function TemperatureContent() {
                   >
                     <div className="flex items-center gap-3">
                       <Thermometer className="w-4 h-4 text-muted-foreground" />
-                      <span className="font-semibold">
+                      <span className="font-semibold max-sm:text-sm">
                         {reading.temperature}°C
                       </span>
                     </div>
                     <div className="text-sm text-muted-foreground flex items-center gap-2">
-                      <span>
+                      <span className="max-sm:text-[0.7em]">
                         {formatDate.readableDateTime(reading.timestamp)}
                       </span>
                     </div>
