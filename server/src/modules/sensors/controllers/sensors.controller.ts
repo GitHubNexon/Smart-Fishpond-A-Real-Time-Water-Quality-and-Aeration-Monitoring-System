@@ -72,8 +72,8 @@ export class SensorsController {
    *
    */
   @Post('ph-water/start')
-  startPhWaterSimulation() {
-    return this.phWaterSensorService.startPhWaterSimulation();
+  startPhBroadcasting() {
+    return this.phWaterSensorService.startPhBroadcasting();
   }
 
   /**
@@ -82,17 +82,40 @@ export class SensorsController {
    *
    */
   @Post('ph-water/stop')
-  stopPhWaterSimulation() {
-    return this.phWaterSensorService.stopPhWaterSimulation();
+  stopPhBroadcasting() {
+    return this.phWaterSensorService.stopPhBroadcasting();
   }
 
 
   // new
-  // POST /sensors/temperature/data
-  @Post('temperature/data')
-  receiveTemperatureFromESP32(@Body() payload: any) {
-  // Calls existing service method
-  return this.temperatureSensorService.handleTemperatureESP32(payload);
+  // // POST /sensors/temperature/data
+  // @Post('temperature/data')
+  // receiveTemperatureFromESP32(@Body() payload: any) {
+  // // Calls existing service method
+  // return this.temperatureSensorService.handleTemperatureESP32(payload);
+  // }
+
+
+  /**
+   * Unified endpoint for all sensor data from ESP32
+   * Example payload:
+   * { sensorType: "temperature", data: { temperature: 28.5, sensorId: "TEMP_SENSOR_01" } }
+   * { sensorType: "phWater", data: { phLevel: 7.8, sensorId: "PH_SENSOR_01" } }
+   */
+  @Post('data')
+  receiveDataFromESP32(@Body() payload: any) {
+    const { sensorType } = payload;
+
+    switch (sensorType) {
+      case 'temperature':
+        return this.temperatureSensorService.handleTemperatureESP32(payload);
+
+      case 'phWater':
+        return this.phWaterSensorService.handlePhWaterESP32(payload);
+
+      default:
+        return { status: 'error', message: 'Unknown sensor type' };
+    }
   }
 
 }
