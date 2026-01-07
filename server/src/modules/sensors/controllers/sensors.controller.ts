@@ -85,4 +85,14 @@ export class SensorsController {
   stopPhWaterSimulation() {
     return this.phWaterSensorService.stopPhWaterSimulation();
   }
+
+
+  // new
+  // POST /sensors/temperature/data
+  @Post('temperature/data')
+  receiveTemperatureFromESP32(@Body() payload: any) {
+  // Calls existing service method
+  return this.temperatureSensorService.handleTemperatureESP32(payload);
+  }
+
 }
