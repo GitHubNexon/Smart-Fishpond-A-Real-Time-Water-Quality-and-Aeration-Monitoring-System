@@ -32,8 +32,8 @@ export class SensorsController {
    * Test in Postman: POST http://localhost:3000/sensors/temperature/start
    */
   @Post('temperature/start')
-  startTemperatureSimulation() {
-    return this.temperatureSensorService.startTemperatureSimulation();
+  startTemperatureBroadcasting() {
+    return this.temperatureSensorService.startTemperatureBroadcasting();
   }
 
   /**
@@ -42,8 +42,8 @@ export class SensorsController {
    * Test in Postman: POST http://localhost:3000/sensors/temperature/stop
    */
   @Post('temperature/stop')
-  stopTemperatureSimulation() {
-    return this.temperatureSensorService.stopTemperatureSimulation();
+  stopTemperatureBroadcasting() {
+    return this.temperatureSensorService.stopTemperatureBroadcasting();
   }
 
   /**

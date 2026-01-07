@@ -1,91 +1,49 @@
 #include <WiFi.h>
-#include <PubSubClient.h>
+#include <HTTPClient.h>
 
 const char* ssid = "WALANG SIGNAL-2G";
 const char* password = "PULMANO4586";
-const char* mqtt_server = "192.168.100.90";
-const int mqtt_port = 1883;
 
-WiFiClient espClient;
-PubSubClient client(espClient);
+// Update this to match your NestJS server
+const char* serverUrl = "http://192.168.100.90:3005/sensors/temperature/data";
 
 void setup() {
   Serial.begin(115200);
-  delay(1000);
-
-  // Connect to WiFi
   WiFi.begin(ssid, password);
-  Serial.print("Connecting to WiFi");
+
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.print(".");
   }
-  Serial.println("\n✓ WiFi connected!");
-  Serial.print("ESP32 IP: ");
-  Serial.println(WiFi.localIP());
-
-  // Test TCP connection to broker
-  Serial.println("\nTesting TCP connection to broker...");
-  WiFiClient testClient;
-  if (testClient.connect(mqtt_server, mqtt_port)) {
-    Serial.println("✓ TCP connection successful!");
-    testClient.stop();
-  } else {
-    Serial.println("✗ TCP connection FAILED! Check broker/firewall.");
-  }
-
-  client.setServer(mqtt_server, mqtt_port);
-  client.setCallback(callback);
+  Serial.println("\nWiFi connected");
 }
 
 void loop() {
-  if (!client.connected()) {
-    reconnect();
-  }
-  client.loop();
-}
+  static unsigned long lastSend = 0;
+  if (millis() - lastSend > 3000) { // send every 3 seconds
+    lastSend = millis();
 
-void callback(char* topic, byte* payload, unsigned int length) {
-  Serial.print("Message arrived [");
-  Serial.print(topic);
-  Serial.print("]: ");
-  for (int i = 0; i < length; i++) {
-    Serial.print((char)payload[i]);
-  }
-  Serial.println();
-}
+    float temp = 28.5; // replace with your sensor reading
+    String payload = "{\"data\":{\"temperature\":";
+    payload += temp;
+    payload += ",\"sensorId\":\"TEMP_SENSOR_01\",\"unit\":\"°C\"}}";
 
-void reconnect() {
-  while (!client.connected()) {
-    Serial.print("Connecting to MQTT...");
-    
-    // Try to connect with a unique client ID
-    String clientId = "ESP32-" + String(WiFi.macAddress());
-    
-    if (client.connect(clientId.c_str())) {
-      Serial.println("✓ Connected!");
-      client.subscribe("esp32/temperature");
-    } else {
-      Serial.print("✗ Failed, rc=");
-      Serial.print(client.state());
-      Serial.print(" (");
-      
-      // Decode error
-      switch(client.state()) {
-        case -4: Serial.print("TIMEOUT"); break;
-        case -3: Serial.print("CONNECTION_LOST"); break;
-        case -2: Serial.print("CONNECT_FAILED"); break;
-        case -1: Serial.print("DISCONNECTED"); break;
-        case  1: Serial.print("BAD_PROTOCOL"); break;
-        case  2: Serial.print("BAD_CLIENT_ID"); break;
-        case  3: Serial.print("UNAVAILABLE"); break;
-        case  4: Serial.print("BAD_CREDENTIALS"); break;
-        case  5: Serial.print("UNAUTHORIZED"); break;
+    if (WiFi.status() == WL_CONNECTED) {
+      HTTPClient http;
+      http.begin(serverUrl);
+      http.addHeader("Content-Type", "application/json");
+
+      int httpResponseCode = http.POST(payload);
+
+      if (httpResponseCode > 0) {
+        Serial.print("Temperature sent, response code: ");
+        Serial.println(httpResponseCode);
+      } else {
+        Serial.print("Error sending temperature: ");
+        Serial.println(httpResponseCode);
       }
-      
-      Serial.println(")");
-      Serial.println("Retrying in 2s...");
-      delay(2000);
+
+      http.end();
     }
   }
 }
